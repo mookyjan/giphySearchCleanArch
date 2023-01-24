@@ -1,7 +1,13 @@
 package com.mudassir.giphyapi.di.modules
 
+import android.os.Bundle
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.savedstate.SavedStateRegistryOwner
+import com.mudassir.domain.usecase.GiphyTrendingUseCase
+import com.mudassir.giphyapi.ui.GiphyTrendingViewModel
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -18,5 +24,35 @@ class ViewModelFactory @Inject constructor(private val viewModelsMap: Map<Class<
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
+    }
+}
+
+
+interface ViewModelAssistedFactory<T : ViewModel> {
+    fun create(handle: SavedStateHandle): T
+}
+
+class GiphyViewModelFactory @Inject constructor(
+    private val trendingUseCase: GiphyTrendingUseCase
+) : ViewModelAssistedFactory<GiphyTrendingViewModel> {
+
+    override
+    fun create(handle: SavedStateHandle) : GiphyTrendingViewModel  {
+        return GiphyTrendingViewModel(handle, trendingUseCase)
+    }
+}
+
+class GenericSavedStateViewModelFactory<out V : ViewModel>(
+    private val viewModelFactory: ViewModelAssistedFactory<V>,
+    owner: SavedStateRegistryOwner,
+    defaultArgs: Bundle? = null
+) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(
+        key: String,
+        modelClass: Class<T>,
+        handle: SavedStateHandle
+    ): T {
+        return viewModelFactory.create(handle) as T
     }
 }
