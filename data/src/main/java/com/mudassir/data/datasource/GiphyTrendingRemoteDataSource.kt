@@ -6,7 +6,11 @@ import retrofit2.http.Query
 
 class GiphyTrendingRemoteDataSource (private val giphyService: GiphyService) {
 
-    suspend fun getTrendingGiphys(query: String): GiphyRemoteResponse {
-        return giphyService.getTrendingGiphys()
+    suspend fun getTrendingGiphys(query: String?): GiphyRemoteResponse {
+        return if (query.isNullOrBlank()) {
+            giphyService.getTrendingGiphys()
+        } else {
+            giphyService.searchForGiphys(searchInput = query)
+        }
     }
 }

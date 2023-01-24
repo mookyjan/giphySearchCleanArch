@@ -1,30 +1,31 @@
 package com.mudassir.giphyapi.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.mudassir.core.Resource
 import com.mudassir.domain.model.GiphyDomainModel
 import com.mudassir.domain.usecase.GiphyTrendingUseCase
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+class GiphyTrendingViewModel @Inject constructor(
+    private val trendingUseCase: GiphyTrendingUseCase
+) : ViewModel() {
 
-class GiphyTrendingViewModel @Inject constructor (private val trendingUseCase: GiphyTrendingUseCase) : ViewModel() {
-
-
-    private val _giphyLiveData = MutableLiveData<Resource<List<GiphyDomainModel>>>()
-    val giphyLiveData: LiveData<Resource<List<GiphyDomainModel>>> get() = _giphyLiveData
-
-
-
-
-    fun callApi() {
-        viewModelScope.launch{
-           val trending = trendingUseCase.executeAsync()
-            _giphyLiveData.postValue(trending)
-        }
-
+    val query: MutableLiveData<String> = MutableLiveData("")
+    companion object {
+        private const val SAVED_QUERY_KEY = "query"
     }
+
+    fun onEnter(query: String? = null) {
+        giphyLiveDataEvent.value = query
+    }
+
+    val giphyLiveDataEvent = MutableLiveData<String>()
+    val giphyLiveData: LiveData<Resource<List<GiphyDomainModel>>> =
+        giphyLiveDataEvent.switchMap { query ->
+            liveData {
+                emit(Resource.loading(null))
+                val result = trendingUseCase.executeAsync(query)
+                emit(result)
+            }
+        }
 }

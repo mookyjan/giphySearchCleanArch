@@ -4,5 +4,5 @@ import com.mudassir.domain.model.GiphyDomainModel
 
 interface GiphyRepository {
 
-    suspend fun getTrendingGiphy() : List<GiphyDomainModel>
+    suspend fun getTrendingGiphy(query: String?) : List<GiphyDomainModel>
 }

@@ -9,10 +9,8 @@ class GiphyRepositoryImpl(
     private val remoteGiphyRemoteResponse: GiphyTrendingRemoteDataSource,
     private val giphyDataToDomainMapper: GiphyDataToDomainMapper
 ) : GiphyRepository {
-
-
-    override suspend fun getTrendingGiphy(): List<GiphyDomainModel> {
-        val list = remoteGiphyRemoteResponse.getTrendingGiphys("")
+    override suspend fun getTrendingGiphy(query: String?): List<GiphyDomainModel> {
+        val list = remoteGiphyRemoteResponse.getTrendingGiphys(query)
         return giphyDataToDomainMapper.invoke(list)
     }
 }
