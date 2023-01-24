@@ -9,11 +9,11 @@ import javax.inject.Inject
 
 class GiphyTrendingUseCase @Inject constructor(private val giphyRepository: GiphyRepository,
                                                private val errorFactory: ErrorFactory
-) : UseCase.UseCaseWithoutParam<List<GiphyDomainModel>>  {
+) : UseCase.UseCaseWithParam<String?,List<GiphyDomainModel>>  {
 
-    override suspend fun executeAsync(): Resource<List<GiphyDomainModel>> {
+    override suspend fun executeAsync(query: String?): Resource<List<GiphyDomainModel>> {
         return try {
-             val trendingList = giphyRepository.getTrendingGiphy()
+             val trendingList = giphyRepository.getTrendingGiphy(query)
              if (trendingList.isEmpty())  return Resource.empty(errorFactory.createEmptyErrorMessage())
             //need to map the model to the UI Model
              val mappedList = trendingList
@@ -22,6 +22,7 @@ class GiphyTrendingUseCase @Inject constructor(private val giphyRepository: Giph
              Resource.error(errorFactory.createApiErrorMessage(ex))
         }
     }
+
 
 
 }

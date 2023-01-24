@@ -60,6 +60,9 @@ dependencies {
     implementation Dependencies.appcompat
     implementation Dependencies.material
     implementation Dependencies.constraint_layout
+    implementation Dependencies.lifecycle_viewmodel_ktx
+    implementation Dependencies.lifecycle_runtime
+    implementation Dependencies.lifecycle_livedata_ktx
 
     //Glide
     implementation Dependencies.glide

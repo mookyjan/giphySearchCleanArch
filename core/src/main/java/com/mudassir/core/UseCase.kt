@@ -2,7 +2,7 @@ package com.mudassir.core
 
 interface UseCase {
 
-    interface UseCaseWithParam<params: Params?, T: Any> : UseCase {
+    interface UseCaseWithParam<params: Any?, T: Any> : UseCase {
         suspend fun executeAsync(param: params?) : Resource<T>
     }
 
