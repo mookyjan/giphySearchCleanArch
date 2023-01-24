@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.mudassir.giphyapi.R
+import com.mudassir.giphyapi.databinding.FragmentFavouritesBinding
 
 /**
  * A simple [Fragment] subclass.
@@ -13,6 +14,8 @@ import com.mudassir.giphyapi.R
  */
 open class FavouritesFragment : Fragment() {
 
+
+    private var mBinding: FragmentFavouritesBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +26,7 @@ open class FavouritesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favourites, container, false)
+        mBinding = FragmentFavouritesBinding.inflate(inflater,container,false)
+        return mBinding?.root
     }
 }

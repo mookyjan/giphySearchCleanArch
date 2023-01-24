@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">core</string>
+    <string name="empty_state_message">No results found, Please try again.</string>
+</resources>
