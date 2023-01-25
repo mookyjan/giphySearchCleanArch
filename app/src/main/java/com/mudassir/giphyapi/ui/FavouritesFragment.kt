@@ -19,6 +19,7 @@ open class FavouritesFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setMenuVisibility(false)
     }
 
     override fun onCreateView(
