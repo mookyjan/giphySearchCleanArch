@@ -1,6 +1,5 @@
 package com.mudassir.giphyapi.ui
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -11,12 +10,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mudassir.core.Status
 import com.mudassir.core.hideKeyboard
+import com.mudassir.giphyapi.Constants.SAVED_QUERY_KEY
 import com.mudassir.giphyapi.R
 import com.mudassir.giphyapi.databinding.FragmentTrendingGiphyBinding
+import com.mudassir.giphyapi.di.modules.GenericSavedStateViewModelFactory
+import com.mudassir.giphyapi.di.modules.GiphyViewModelFactory
 import com.mudassir.giphyapi.ui.adapter.GiphyTrendingAdapter
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -32,14 +33,13 @@ class GiphyTrendingFragment : Fragment(), MenuProvider {
     lateinit var mBinding: FragmentTrendingGiphyBinding
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    internal lateinit var detailViewModelFactory: GiphyViewModelFactory
 
-    private val viewModel: GiphyTrendingViewModel by viewModels { viewModelFactory }
-    val giphyAdapter = GiphyTrendingAdapter()
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
+    private val viewModel: GiphyTrendingViewModel by viewModels {
+        GenericSavedStateViewModelFactory(detailViewModelFactory, this)
     }
+    private val giphyAdapter = GiphyTrendingAdapter()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +57,8 @@ class GiphyTrendingFragment : Fragment(), MenuProvider {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         AndroidSupportInjection.inject(this)
+        val query = savedInstanceState?.getString(SAVED_QUERY_KEY) ?: ""
+        Log.d(TAG, "onViewCreated: $query   ${viewModel.giphyLiveDataEvent.value}")
         observeEvents()
         initRecyclerView()
         //setup for the new menu options , the old one is deprecated
@@ -64,9 +66,13 @@ class GiphyTrendingFragment : Fragment(), MenuProvider {
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(SAVED_QUERY_KEY, viewModel.giphyLiveDataEvent.value.toString())
+    }
+
     private fun observeEvents() {
-        viewModel.giphyLiveDataEvent.value = viewModel.query.value
-//        viewModel.getGiphyList("")
+        viewModel.onEnter()
         viewModel.giphyLiveData.observe(viewLifecycleOwner, Observer {
             when (it.status) {
                 Status.LOADING -> {
@@ -84,18 +90,18 @@ class GiphyTrendingFragment : Fragment(), MenuProvider {
                 }
                 Status.ERROR -> {
                     hideProgressBar()
-                    Log.d(TAG, "observeEvents: Error")
+                    Log.d(TAG, "observeEvents: Error ${it.data}")
                 }
             }
         })
     }
 
     private fun showProgressBar() {
-        mBinding.progressCircular.visibility = View.VISIBLE
+        mBinding.progressCircular.show()
     }
 
     private fun hideProgressBar() {
-        mBinding.progressCircular.visibility = View.GONE
+        mBinding.progressCircular.hide()
     }
 
     private fun initRecyclerView() {
@@ -118,9 +124,12 @@ class GiphyTrendingFragment : Fragment(), MenuProvider {
         // getting search view of our item.
         val searchView: SearchView = searchItem.actionView as SearchView
 
+        searchView.setQuery(viewModel.giphyLiveDataEvent.value.toString(),false)
+        searchView.clearFocus()
+
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                searchView.hideKeyboard()
+                searchView?.hideKeyboard()
                 viewModel.onEnter(query)
                 return true
             }
