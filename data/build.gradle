@@ -45,4 +45,9 @@ dependencies {
     implementation Dependencies.retrofit
     implementation Dependencies.okHttp
     api Dependencies.logging
+
+    def room = "2.5.0"
+    api "androidx.room:room-ktx:2.5.0"
+    api "androidx.room:room-runtime:2.5.0"
+    kapt "androidx.room:room-compiler:2.5.0"
 }
