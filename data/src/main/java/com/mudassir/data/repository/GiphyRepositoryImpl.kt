@@ -1,6 +1,6 @@
 package com.mudassir.data.repository
 
-import com.mudassir.data.datasource.GiphyTrendingRemoteDataSource
+import com.mudassir.data.datasource.remote.GiphyTrendingRemoteDataSource
 import com.mudassir.data.datasource.local.GiphyTrendingLocalDataSource
 import com.mudassir.data.datasource.local.model.GiphyEntityModel
 import com.mudassir.data.datasource.local.model.toDomainModel

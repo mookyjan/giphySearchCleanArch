@@ -1,4 +1,4 @@
-package com.mudassir.data.service
+package com.mudassir.data.datasource.remote.service
 
 import com.mudassir.data.BuildConfig
 import com.mudassir.data.model.GiphyRemoteResponse

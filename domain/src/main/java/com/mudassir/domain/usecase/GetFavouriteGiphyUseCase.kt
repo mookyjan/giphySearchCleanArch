@@ -8,8 +8,9 @@ import com.mudassir.domain.model.GiphyDomainModel
 import com.mudassir.domain.repository.GiphyRepository
 import javax.inject.Inject
 
-class GetFavouriteGiphyUseCase @Inject constructor(private val giphyRepository: GiphyRepository,
-                                                   private val errorFactory: ErrorFactory
+class GetFavouriteGiphyUseCase @Inject constructor(
+    private val giphyRepository: GiphyRepository,
+    private val errorFactory: ErrorFactory
 ) : UseCase.UseCaseWithoutParam<List<GiphyDomainModel>> {
 
     override suspend fun executeAsync(): Resource<List<GiphyDomainModel>> {

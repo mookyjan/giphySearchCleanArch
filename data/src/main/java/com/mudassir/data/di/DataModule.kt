@@ -1,13 +1,13 @@
 package com.mudassir.data.di
 
 import android.content.Context
-import com.mudassir.data.datasource.GiphyTrendingRemoteDataSource
+import com.mudassir.data.datasource.remote.GiphyTrendingRemoteDataSource
 import com.mudassir.data.datasource.local.GiphyTrendingLocalDataSource
 import com.mudassir.data.datasource.local.dao.GiphyDao
 import com.mudassir.data.datasource.local.db.GiphyDatabase
 import com.mudassir.data.mapper.GiphyDataToDomainMapper
 import com.mudassir.data.repository.GiphyRepositoryImpl
-import com.mudassir.data.service.GiphyService
+import com.mudassir.data.datasource.remote.service.GiphyService
 import com.mudassir.domain.repository.GiphyRepository
 import dagger.Module
 import dagger.Provides

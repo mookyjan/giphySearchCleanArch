@@ -17,8 +17,9 @@ class AddToFavouriteUseCase @Inject constructor(
         return try {
             query?.let {
                 giphyRepository.addToFavourite(it)
+                Resource.success(Unit)
             }
-            Resource.success(Unit)
+            Resource.error("Error")
         } catch (ex: Exception) {
             Log.d("UseCaseError", "executeAsync:  $ex")
             Resource.error(errorFactory.createApiErrorMessage(ex))

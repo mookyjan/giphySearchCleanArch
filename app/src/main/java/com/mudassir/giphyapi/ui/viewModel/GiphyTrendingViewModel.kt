@@ -1,4 +1,4 @@
-package com.mudassir.giphyapi.ui
+package com.mudassir.giphyapi.ui.viewModel
 
 import androidx.lifecycle.*
 import com.mudassir.core.Resource
@@ -6,7 +6,7 @@ import com.mudassir.domain.model.GiphyDomainModel
 import com.mudassir.domain.usecase.AddToFavouriteUseCase
 import com.mudassir.domain.usecase.GetFavouriteGiphyUseCase
 import com.mudassir.domain.usecase.GiphyTrendingUseCase
-import com.mudassir.giphyapi.Constants.SAVED_QUERY_KEY
+import com.mudassir.giphyapi.util.Constants.SAVED_QUERY_KEY
 import kotlinx.coroutines.launch
 
 class GiphyTrendingViewModel constructor(

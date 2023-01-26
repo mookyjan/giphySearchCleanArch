@@ -2,7 +2,7 @@ package com.mudassir.data.util
 
 
 import com.mudassir.data.BuildConfig
-import com.mudassir.data.service.GiphyService
+import com.mudassir.data.datasource.remote.service.GiphyService
 import com.serjltt.moshi.adapters.Wrapped
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

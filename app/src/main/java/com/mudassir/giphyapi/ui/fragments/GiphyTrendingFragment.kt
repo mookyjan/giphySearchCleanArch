@@ -1,4 +1,4 @@
-package com.mudassir.giphyapi.ui
+package com.mudassir.giphyapi.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -15,12 +15,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mudassir.core.Status
 import com.mudassir.core.hideKeyboard
 import com.mudassir.domain.model.GiphyDomainModel
-import com.mudassir.giphyapi.Constants.SAVED_QUERY_KEY
+import com.mudassir.giphyapi.util.Constants.SAVED_QUERY_KEY
 import com.mudassir.giphyapi.R
 import com.mudassir.giphyapi.databinding.FragmentTrendingGiphyBinding
 import com.mudassir.giphyapi.di.modules.GenericSavedStateViewModelFactory
 import com.mudassir.giphyapi.di.modules.GiphyViewModelFactory
 import com.mudassir.giphyapi.ui.adapter.GiphyTrendingAdapter
+import com.mudassir.giphyapi.ui.viewModel.GiphyTrendingViewModel
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -41,8 +42,6 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
         GenericSavedStateViewModelFactory(detailViewModelFactory, this)
     }
     private val giphyAdapter = GiphyTrendingAdapter()
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
@@ -120,11 +119,8 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         // Add menu items here
         menuInflater.inflate(R.menu.menu_toolbar_main, menu)
-
         // below line is to get our menu item.
         val searchItem: MenuItem = menu.findItem(R.id.menu_search)
-
-
         // getting search view of our item.
         val searchView: SearchView = searchItem.actionView as SearchView
         val closeButton: ImageView =
@@ -170,8 +166,6 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
 
     override fun onGiphyItemClick(view: View, item: GiphyDomainModel) {
         Log.d(TAG, "onGiphyItemClick: $item")
-//        viewModel.addTofavourite.value = item
         viewModel.addToFavourite(item)
-//        viewModel.addToFavouriteEvent.value = Unit
     }
 }
