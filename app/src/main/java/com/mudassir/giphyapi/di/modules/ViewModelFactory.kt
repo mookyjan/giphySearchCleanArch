@@ -6,8 +6,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.savedstate.SavedStateRegistryOwner
+import com.mudassir.domain.usecase.AddToFavouriteUseCase
+import com.mudassir.domain.usecase.GetFavouriteGiphyUseCase
 import com.mudassir.domain.usecase.GiphyTrendingUseCase
-import com.mudassir.giphyapi.ui.GiphyTrendingViewModel
+import com.mudassir.domain.usecase.RemoveFromFavouriteUseCase
+import com.mudassir.giphyapi.ui.viewModel.GiphyTrendingViewModel
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -33,12 +36,15 @@ interface ViewModelAssistedFactory<T : ViewModel> {
 }
 
 class GiphyViewModelFactory @Inject constructor(
-    private val trendingUseCase: GiphyTrendingUseCase
+    private val trendingUseCase: GiphyTrendingUseCase,
+    private val favouriteGiphyUseCase: GetFavouriteGiphyUseCase,
+    private val addToFavouriteUseCase: AddToFavouriteUseCase,
+    private val removeFromFavouriteUseCase: RemoveFromFavouriteUseCase
 ) : ViewModelAssistedFactory<GiphyTrendingViewModel> {
 
     override
-    fun create(handle: SavedStateHandle) : GiphyTrendingViewModel  {
-        return GiphyTrendingViewModel(handle, trendingUseCase)
+    fun create(handle: SavedStateHandle) : GiphyTrendingViewModel {
+        return GiphyTrendingViewModel(handle, trendingUseCase, favouriteGiphyUseCase, addToFavouriteUseCase, removeFromFavouriteUseCase)
     }
 }
 

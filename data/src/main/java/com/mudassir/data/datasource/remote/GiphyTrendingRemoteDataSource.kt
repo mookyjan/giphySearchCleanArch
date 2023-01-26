@@ -1,11 +1,9 @@
-package com.mudassir.data.datasource
+package com.mudassir.data.datasource.remote
 
 import com.mudassir.data.model.GiphyRemoteResponse
-import com.mudassir.data.service.GiphyService
-import retrofit2.http.Query
+import com.mudassir.data.datasource.remote.service.GiphyService
 
 class GiphyTrendingRemoteDataSource (private val giphyService: GiphyService) {
-
     suspend fun getTrendingGiphys(query: String?): GiphyRemoteResponse {
         return if (query.isNullOrBlank()) {
             giphyService.getTrendingGiphys()

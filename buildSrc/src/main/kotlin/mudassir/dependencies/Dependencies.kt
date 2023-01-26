@@ -56,6 +56,11 @@ object Dependencies {
     const val glide = "com.github.bumptech.glide:glide:${Versions.glide}"
     const val glide_compiler = "com.github.bumptech.glide:compiler:${Versions.glide}"
     const val glide_okhttp = "com.github.bumptech.glide:okhttp3-integration:${Versions.glide}"
+
+    //Room
+    const val roomKtx = "androidx.room:room-ktx:${Versions.room}"
+    const val roomRuntime = "androidx.room:room-runtime:${Versions.room}"
+    const val roomCompiler ="androidx.room:room-compiler:${Versions.room}"
 }
 
 object TestDependencies {

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">giphyApiCleanArchitecutre</string>
+    <string name="app_name">GiphyApi</string>
 
     <string name="home">Home</string>
     <string name="favourite">Favourite</string>

@@ -1,8 +1,9 @@
-package com.mudassir.giphyapi.ui
+package com.mudassir.giphyapi.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -13,12 +14,14 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mudassir.core.Status
 import com.mudassir.core.hideKeyboard
-import com.mudassir.giphyapi.Constants.SAVED_QUERY_KEY
+import com.mudassir.domain.model.GiphyDomainModel
+import com.mudassir.giphyapi.util.Constants.SAVED_QUERY_KEY
 import com.mudassir.giphyapi.R
 import com.mudassir.giphyapi.databinding.FragmentTrendingGiphyBinding
 import com.mudassir.giphyapi.di.modules.GenericSavedStateViewModelFactory
 import com.mudassir.giphyapi.di.modules.GiphyViewModelFactory
 import com.mudassir.giphyapi.ui.adapter.GiphyTrendingAdapter
+import com.mudassir.giphyapi.ui.viewModel.GiphyTrendingViewModel
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -26,7 +29,7 @@ import javax.inject.Inject
  * A simple [Fragment] subclass.
  * create an instance of this fragment.
  */
-class GiphyTrendingFragment : Fragment(), MenuProvider {
+class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Callbacks {
 
     val TAG = GiphyTrendingFragment.javaClass.name
 
@@ -39,10 +42,9 @@ class GiphyTrendingFragment : Fragment(), MenuProvider {
         GenericSavedStateViewModelFactory(detailViewModelFactory, this)
     }
     private val giphyAdapter = GiphyTrendingAdapter()
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AndroidSupportInjection.inject(this)
     }
 
     override fun onCreateView(
@@ -56,7 +58,6 @@ class GiphyTrendingFragment : Fragment(), MenuProvider {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        AndroidSupportInjection.inject(this)
         val query = savedInstanceState?.getString(SAVED_QUERY_KEY) ?: ""
         Log.d(TAG, "onViewCreated: $query   ${viewModel.giphyLiveDataEvent.value}")
         observeEvents()
@@ -105,6 +106,7 @@ class GiphyTrendingFragment : Fragment(), MenuProvider {
     }
 
     private fun initRecyclerView() {
+        giphyAdapter.setupListener(this)
         mBinding.rvGiphyList.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         mBinding.rvGiphyList.adapter = giphyAdapter
@@ -117,14 +119,14 @@ class GiphyTrendingFragment : Fragment(), MenuProvider {
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         // Add menu items here
         menuInflater.inflate(R.menu.menu_toolbar_main, menu)
-
         // below line is to get our menu item.
         val searchItem: MenuItem = menu.findItem(R.id.menu_search)
-
         // getting search view of our item.
         val searchView: SearchView = searchItem.actionView as SearchView
+        val closeButton: ImageView =
+            searchView.findViewById(androidx.appcompat.R.id.search_close_btn)
 
-        searchView.setQuery(viewModel.giphyLiveDataEvent.value.toString(),false)
+        searchView.setQuery(viewModel.giphyLiveDataEvent.value.toString(), false)
         searchView.clearFocus()
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -141,6 +143,14 @@ class GiphyTrendingFragment : Fragment(), MenuProvider {
                 return true
             }
         })
+
+        closeButton.setOnClickListener {
+            //when click on cross icon so reset to the trending api
+            searchView.clearFocus()
+            searchView.onActionViewCollapsed()
+            viewModel.onEnter("")
+        }
+
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -152,5 +162,10 @@ class GiphyTrendingFragment : Fragment(), MenuProvider {
             }
             else -> false
         }
+    }
+
+    override fun onGiphyItemClick(view: View, item: GiphyDomainModel) {
+        Log.d(TAG, "onGiphyItemClick: $item")
+        viewModel.addToFavourite(item)
     }
 }

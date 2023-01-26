@@ -6,6 +6,7 @@ import com.mudassir.giphyapi.di.component.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -20,8 +21,7 @@ class GiphyApp : Application(), HasAndroidInjector  {
 
     override fun onCreate() {
         super.onCreate()
-//        Timber.plant(Timber.DebugTree())
-
+        Timber.plant(Timber.DebugTree())
         component = DaggerAppComponent.builder()
             .application(this)
             .context(this)

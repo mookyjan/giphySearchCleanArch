@@ -8,19 +8,22 @@ import com.mudassir.domain.model.GiphyDomainModel
 import com.mudassir.domain.repository.GiphyRepository
 import javax.inject.Inject
 
-class GiphyTrendingUseCase @Inject constructor(
+class GetFavouriteGiphyUseCase @Inject constructor(
     private val giphyRepository: GiphyRepository,
     private val errorFactory: ErrorFactory
-) : UseCase.UseCaseWithParam<String?, List<GiphyDomainModel>> {
+) : UseCase.UseCaseWithoutParam<List<GiphyDomainModel>> {
 
-    override suspend fun executeAsync(query: String?): Resource<List<GiphyDomainModel>> {
+    override suspend fun executeAsync(): Resource<List<GiphyDomainModel>> {
         return try {
-            val trendingList = giphyRepository.getTrendingGiphy(query)
-            if (trendingList.isEmpty()) return Resource.empty(errorFactory.createEmptyErrorMessage())
-            Resource.success(trendingList)
+            val favouriteList = giphyRepository.getFavouriteGiphyList()
+            Log.d("UseCaseSuccess", "executeAsync f:  $favouriteList")
+            if (favouriteList.isEmpty()) return Resource.empty(errorFactory.createEmptyErrorMessage())
+            Resource.success(favouriteList)
         } catch (ex: Exception) {
             Log.d("UseCaseError", "executeAsync:  $ex")
             Resource.error(errorFactory.createApiErrorMessage(ex))
         }
     }
 }
+
+
