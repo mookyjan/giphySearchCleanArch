@@ -9,4 +9,6 @@ interface GiphyRepository {
     suspend fun addToFavourite(giphyDomainModel: GiphyDomainModel)
 
     suspend fun getFavouriteGiphyList(): List<GiphyDomainModel>
+
+    suspend fun removeFromFavouriteList(giphyDomainModel: GiphyDomainModel)
 }

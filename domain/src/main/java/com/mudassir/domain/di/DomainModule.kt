@@ -4,6 +4,7 @@ import com.mudassir.core.util.ErrorFactory
 import com.mudassir.domain.repository.GiphyRepository
 import com.mudassir.domain.usecase.GetFavouriteGiphyUseCase
 import com.mudassir.domain.usecase.GiphyTrendingUseCase
+import com.mudassir.domain.usecase.RemoveFromFavouriteUseCase
 import dagger.Module
 import dagger.Provides
 
@@ -17,4 +18,8 @@ class DomainModule {
     @Provides
     fun provideFavouriteUseCase(giphyRepository: GiphyRepository, errorFactory: ErrorFactory) =
         GetFavouriteGiphyUseCase(giphyRepository, errorFactory)
+
+    @Provides
+    fun provideRemoveFromFavouriteUseCase(giphyRepository: GiphyRepository, errorFactory: ErrorFactory) =
+        RemoveFromFavouriteUseCase(giphyRepository, errorFactory)
 }

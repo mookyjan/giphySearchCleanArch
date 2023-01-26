@@ -1,9 +1,6 @@
 package com.mudassir.data.datasource.local.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.mudassir.data.datasource.local.model.GiphyEntityModel
 
 @Dao
@@ -20,5 +17,9 @@ internal interface GiphyDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addToFavourite(giphy: GiphyEntityModel)
+
+    @Delete
+    suspend fun removeFromFavourite(giphy: GiphyEntityModel)
+
 
 }

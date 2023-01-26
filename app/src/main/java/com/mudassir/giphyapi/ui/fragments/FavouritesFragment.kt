@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mudassir.core.Status
+import com.mudassir.domain.model.GiphyDomainModel
 import com.mudassir.giphyapi.databinding.FragmentFavouritesBinding
 import com.mudassir.giphyapi.di.modules.GenericSavedStateViewModelFactory
 import com.mudassir.giphyapi.di.modules.GiphyViewModelFactory
@@ -22,7 +23,7 @@ import javax.inject.Inject
  * A simple [Fragment] subclass.
  * create an instance of this fragment.
  */
-class FavouritesFragment : Fragment() {
+class FavouritesFragment : Fragment(), FavouriteAdapter.Callbacks {
 
     val TAG = GiphyTrendingFragment.javaClass.name
     private var mBinding: FragmentFavouritesBinding? = null
@@ -59,6 +60,7 @@ class FavouritesFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
+        favouriteListAdapter.setupListener(this)
         mBinding?.rvFavouriteList?.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         mBinding?.rvFavouriteList?.adapter = favouriteListAdapter
@@ -94,6 +96,11 @@ class FavouritesFragment : Fragment() {
 
     private fun hideProgressBar() {
         mBinding?.progressCircular?.hide()
+    }
+
+    override fun onGiphyItemClick(view: View, item: GiphyDomainModel) {
+        viewModel.removeFromFavourite(item)
+        viewModel.addToFavouriteEvent.value = Unit
     }
 
 }

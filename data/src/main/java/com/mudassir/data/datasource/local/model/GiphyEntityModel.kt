@@ -24,3 +24,13 @@ internal fun GiphyEntityModel.toDomainModel() =
         url = this.url,
         type = this.type
     )
+
+internal fun GiphyDomainModel.toEntityModel() =
+    GiphyEntityModel(
+        id = this.title.orEmpty(),
+        title = this.title.orEmpty(),
+        rating = this.rating.orEmpty(),
+        url = this.url.orEmpty(),
+        type = this.type.orEmpty(),
+        isFavourite = false
+    )

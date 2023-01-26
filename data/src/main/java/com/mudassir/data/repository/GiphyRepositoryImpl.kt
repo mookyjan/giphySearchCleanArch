@@ -4,6 +4,7 @@ import com.mudassir.data.datasource.remote.GiphyTrendingRemoteDataSource
 import com.mudassir.data.datasource.local.GiphyTrendingLocalDataSource
 import com.mudassir.data.datasource.local.model.GiphyEntityModel
 import com.mudassir.data.datasource.local.model.toDomainModel
+import com.mudassir.data.datasource.local.model.toEntityModel
 import com.mudassir.data.mapper.GiphyDataToDomainMapper
 import com.mudassir.domain.model.GiphyDomainModel
 import com.mudassir.domain.repository.GiphyRepository
@@ -34,5 +35,9 @@ internal class GiphyRepositoryImpl(
             isFavourite = true
         )
         giphyTrendingLocalDataSource.addToFavourite(giphyEntityModel)
+    }
+
+    override suspend fun removeFromFavouriteList(giphyDomainModel: GiphyDomainModel) {
+        giphyTrendingLocalDataSource.removeFromFavourite(giphyDomainModel.toEntityModel())
     }
 }

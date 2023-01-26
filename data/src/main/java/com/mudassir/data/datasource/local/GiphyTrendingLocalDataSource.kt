@@ -13,4 +13,8 @@ internal class GiphyTrendingLocalDataSource(private val giphyDao: GiphyDao) {
         giphyDao.addToFavourite(giphy)
     }
 
+    suspend fun removeFromFavourite(giphy: GiphyEntityModel) {
+        giphyDao.removeFromFavourite(giphy)
+    }
+
 }
