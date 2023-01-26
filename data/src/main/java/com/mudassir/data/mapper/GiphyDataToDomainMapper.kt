@@ -16,6 +16,7 @@ class GiphyDataToDomainMapper @Inject constructor() :
             input.data?.forEach {
                 giphyList.add(
                     GiphyDomainModel(
+                        id = it.id.orEmpty(),
                         title  = it.title.orEmpty(),
                         rating  = it.rating.orEmpty(),
                         url = it.images?.fixedHeight?.url.orEmpty(),

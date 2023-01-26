@@ -3,6 +3,7 @@ package com.mudassir.giphyapi.ui
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -44,6 +45,7 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AndroidSupportInjection.inject(this)
     }
 
     override fun onCreateView(
@@ -57,7 +59,6 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        AndroidSupportInjection.inject(this)
         val query = savedInstanceState?.getString(SAVED_QUERY_KEY) ?: ""
         Log.d(TAG, "onViewCreated: $query   ${viewModel.giphyLiveDataEvent.value}")
         observeEvents()
@@ -123,8 +124,11 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
         // below line is to get our menu item.
         val searchItem: MenuItem = menu.findItem(R.id.menu_search)
 
+
         // getting search view of our item.
         val searchView: SearchView = searchItem.actionView as SearchView
+        val closeButton: ImageView =
+            searchView.findViewById(androidx.appcompat.R.id.search_close_btn)
 
         searchView.setQuery(viewModel.giphyLiveDataEvent.value.toString(), false)
         searchView.clearFocus()
@@ -143,6 +147,14 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
                 return true
             }
         })
+
+        closeButton.setOnClickListener {
+            //when click on cross icon so reset to the trending api
+            searchView.clearFocus()
+            searchView.onActionViewCollapsed()
+            viewModel.onEnter("")
+        }
+
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -158,7 +170,8 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
 
     override fun onGiphyItemClick(view: View, item: GiphyDomainModel) {
         Log.d(TAG, "onGiphyItemClick: $item")
-//        viewModel.addTofavourite.postValue(item)
-        viewModel.addTofav(item)
+//        viewModel.addTofavourite.value = item
+        viewModel.addToFavourite(item)
+//        viewModel.addToFavouriteEvent.value = Unit
     }
 }

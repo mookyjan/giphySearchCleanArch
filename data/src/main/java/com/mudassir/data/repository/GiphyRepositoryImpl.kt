@@ -1,7 +1,7 @@
 package com.mudassir.data.repository
 
 import com.mudassir.data.datasource.GiphyTrendingRemoteDataSource
-import com.mudassir.data.datasource.local.dao.GiphyDao
+import com.mudassir.data.datasource.local.GiphyTrendingLocalDataSource
 import com.mudassir.data.datasource.local.model.GiphyEntityModel
 import com.mudassir.data.datasource.local.model.toDomainModel
 import com.mudassir.data.mapper.GiphyDataToDomainMapper
@@ -10,7 +10,7 @@ import com.mudassir.domain.repository.GiphyRepository
 
 internal class GiphyRepositoryImpl(
     private val remoteGiphyRemoteResponse: GiphyTrendingRemoteDataSource,
-    private val giphyDao: GiphyDao,
+    private val giphyTrendingLocalDataSource: GiphyTrendingLocalDataSource,
     private val giphyDataToDomainMapper: GiphyDataToDomainMapper
 ) : GiphyRepository {
     override suspend fun getTrendingGiphy(query: String?): List<GiphyDomainModel> {
@@ -19,7 +19,7 @@ internal class GiphyRepositoryImpl(
     }
 
     override suspend fun getFavouriteGiphyList(): List<GiphyDomainModel> {
-        val list = giphyDao.getAll()
+        val list = giphyTrendingLocalDataSource.getFavouriteGiphyList()
         val transform: (GiphyEntityModel) -> GiphyDomainModel = { it.toDomainModel() }
         return list.map(transform)
     }
@@ -33,6 +33,6 @@ internal class GiphyRepositoryImpl(
             type = giphyDomainModel.type.orEmpty(),
             isFavourite = true
         )
-        giphyDao.addToFavourite(giphyEntityModel)
+        giphyTrendingLocalDataSource.addToFavourite(giphyEntityModel)
     }
 }

@@ -20,4 +20,5 @@ internal interface GiphyDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addToFavourite(giphy: GiphyEntityModel)
+
 }

@@ -12,8 +12,8 @@ import com.mudassir.domain.model.GiphyDomainModel
 import com.mudassir.giphyapi.R
 import com.mudassir.giphyapi.databinding.SingleItemGiphyBinding
 
-class GiphyTrendingAdapter :
-    ListAdapter<GiphyDomainModel, GiphyTrendingAdapter.ItemViewHolder>(DiffCallback()) {
+class FavouriteAdapter :
+    ListAdapter<GiphyDomainModel, FavouriteAdapter.ItemViewHolder>(Comparator()) {
 
     private var callbacks: Callbacks? = null
     fun setupListener(listener: Callbacks?) {
@@ -50,10 +50,10 @@ class GiphyTrendingAdapter :
     }
 }
 
-class DiffCallback : DiffUtil.ItemCallback<GiphyDomainModel>() {
+class Comparator : DiffUtil.ItemCallback<GiphyDomainModel>() {
 
     override fun areItemsTheSame(oldItem: GiphyDomainModel, newItem: GiphyDomainModel): Boolean {
-        return oldItem?.id == newItem?.id
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: GiphyDomainModel, newItem: GiphyDomainModel): Boolean {

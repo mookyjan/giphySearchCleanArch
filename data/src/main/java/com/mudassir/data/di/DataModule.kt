@@ -40,10 +40,10 @@ class DataModule {
     @Provides
     internal fun provideGiphyRepository(
         giphyTrendingRemoteDataSource: GiphyTrendingRemoteDataSource,
-        giphyDao: GiphyDao,
+        giphyTrendingLocalDataSource: GiphyTrendingLocalDataSource,
         giphyDataToDomainMapper: GiphyDataToDomainMapper
     ): GiphyRepository =
-        GiphyRepositoryImpl(giphyTrendingRemoteDataSource, giphyDao, giphyDataToDomainMapper)
+        GiphyRepositoryImpl(giphyTrendingRemoteDataSource, giphyTrendingLocalDataSource, giphyDataToDomainMapper)
 }
 
 

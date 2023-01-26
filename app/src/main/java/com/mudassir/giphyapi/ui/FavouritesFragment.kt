@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,7 +14,7 @@ import com.mudassir.core.Status
 import com.mudassir.giphyapi.databinding.FragmentFavouritesBinding
 import com.mudassir.giphyapi.di.modules.GenericSavedStateViewModelFactory
 import com.mudassir.giphyapi.di.modules.GiphyViewModelFactory
-import com.mudassir.giphyapi.ui.adapter.GiphyTrendingAdapter
+import com.mudassir.giphyapi.ui.adapter.FavouriteAdapter
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -21,7 +22,7 @@ import javax.inject.Inject
  * A simple [Fragment] subclass.
  * create an instance of this fragment.
  */
-open class FavouritesFragment : Fragment() {
+class FavouritesFragment : Fragment() {
 
     val TAG = GiphyTrendingFragment.javaClass.name
     private var mBinding: FragmentFavouritesBinding? = null
@@ -33,10 +34,11 @@ open class FavouritesFragment : Fragment() {
         GenericSavedStateViewModelFactory(detailViewModelFactory, this)
     }
 
-    private val giphyAdapter = GiphyTrendingAdapter()
+    private val favouriteListAdapter = FavouriteAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AndroidSupportInjection.inject(this)
         setMenuVisibility(false)
     }
 
@@ -51,7 +53,7 @@ open class FavouritesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        AndroidSupportInjection.inject(this)
+        viewModel.addToFavouriteEvent.value = Unit
         observeEvents()
         initRecyclerView()
     }
@@ -59,11 +61,11 @@ open class FavouritesFragment : Fragment() {
     private fun initRecyclerView() {
         mBinding?.rvFavouriteList?.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        mBinding?.rvFavouriteList?.adapter = giphyAdapter
+        mBinding?.rvFavouriteList?.adapter = favouriteListAdapter
     }
 
     private fun observeEvents() {
-        viewModel.favouriteList.observe(viewLifecycleOwner, Observer {
+        viewModel.getFavList().observe(viewLifecycleOwner, Observer {
             when (it.status) {
                 Status.LOADING -> {
                     Log.d(TAG, "observeEvents: Loading")
@@ -71,8 +73,8 @@ open class FavouritesFragment : Fragment() {
                 }
                 Status.SUCCESS -> {
                     hideProgressBar()
-                    Log.d(TAG, "observeEvents: Success")
-                    giphyAdapter.submitList(it.data)
+                    Log.d(TAG, "observeEvents: Success ${it.data?.size}")
+                    favouriteListAdapter.submitList(it.data)
                 }
                 Status.EMPTY -> {
                     hideProgressBar()
