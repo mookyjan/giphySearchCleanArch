@@ -16,10 +16,10 @@ class GiphyDataToDomainMapper @Inject constructor() :
             input.data?.forEach {
                 giphyList.add(
                     GiphyDomainModel(
-                        height = it.images?.fixedHeight?.height.orEmpty(),
-                        size = it.images?.fixedHeight?.size.orEmpty(),
+                        title  = it.title.orEmpty(),
+                        rating  = it.rating.orEmpty(),
                         url = it.images?.fixedHeight?.url.orEmpty(),
-                        width = it.images?.fixedHeight?.width.orEmpty()
+                        type  = it.type.orEmpty()
                     )
                 )
             }

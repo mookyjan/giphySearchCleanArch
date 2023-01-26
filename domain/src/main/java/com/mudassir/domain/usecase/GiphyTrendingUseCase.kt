@@ -1,11 +1,13 @@
 package com.mudassir.domain.usecase
 
+import android.util.Log
 import com.mudassir.core.Resource
 import com.mudassir.core.UseCase
 import com.mudassir.core.util.ErrorFactory
 import com.mudassir.domain.model.GiphyDomainModel
 import com.mudassir.domain.repository.GiphyRepository
 import javax.inject.Inject
+import kotlin.math.log
 
 class GiphyTrendingUseCase @Inject constructor(private val giphyRepository: GiphyRepository,
                                                private val errorFactory: ErrorFactory
@@ -19,6 +21,7 @@ class GiphyTrendingUseCase @Inject constructor(private val giphyRepository: Giph
              val mappedList = trendingList
              Resource.success(mappedList)
         } catch (ex: Exception) {
+            Log.d("UseCaseError", "executeAsync:  $ex")
              Resource.error(errorFactory.createApiErrorMessage(ex))
         }
     }

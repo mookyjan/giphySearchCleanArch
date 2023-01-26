@@ -1,6 +1,10 @@
 package com.mudassir.data.di
 
+import android.content.Context
 import com.mudassir.data.datasource.GiphyTrendingRemoteDataSource
+import com.mudassir.data.datasource.local.GiphyTrendingLocalDataSource
+import com.mudassir.data.datasource.local.dao.GiphyDao
+import com.mudassir.data.datasource.local.db.GiphyDatabase
 import com.mudassir.data.mapper.GiphyDataToDomainMapper
 import com.mudassir.data.repository.GiphyRepositoryImpl
 import com.mudassir.data.service.GiphyService
@@ -23,11 +27,23 @@ class DataModule {
 
 
     @Provides
-    fun provideGiphyRepository(
+    internal fun provideGiphyDatabase(context: Context) = GiphyDatabase.newInstance(context)
+
+    @Provides
+    internal fun provideGiphyLocalDataSource(giphyDao: GiphyDao) =
+        GiphyTrendingLocalDataSource(giphyDao)
+
+    @Provides
+    internal fun provideGiphyDao(database: GiphyDatabase): GiphyDao = database.giphys()
+
+
+    @Provides
+    internal fun provideGiphyRepository(
         giphyTrendingRemoteDataSource: GiphyTrendingRemoteDataSource,
+        giphyDao: GiphyDao,
         giphyDataToDomainMapper: GiphyDataToDomainMapper
     ): GiphyRepository =
-        GiphyRepositoryImpl(giphyTrendingRemoteDataSource, giphyDataToDomainMapper)
+        GiphyRepositoryImpl(giphyTrendingRemoteDataSource, giphyDao, giphyDataToDomainMapper)
 }
 
 

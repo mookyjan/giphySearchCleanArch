@@ -12,10 +12,21 @@ import com.mudassir.domain.model.GiphyDomainModel
 import com.mudassir.giphyapi.R
 import com.mudassir.giphyapi.databinding.SingleItemGiphyBinding
 
-class GiphyTrendingAdapter : ListAdapter<GiphyDomainModel, GiphyTrendingAdapter.ItemViewHolder>(DiffCallback())  {
+class GiphyTrendingAdapter :
+    ListAdapter<GiphyDomainModel, GiphyTrendingAdapter.ItemViewHolder>(DiffCallback()) {
+
+    private var callbacks: Callbacks? = null
+    fun setupListener(listener: Callbacks?) {
+        this.callbacks = listener
+    }
+
+    interface Callbacks {
+        fun onGiphyItemClick(view: View, item: GiphyDomainModel)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val viewBinding = SingleItemGiphyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val viewBinding =
+            SingleItemGiphyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ItemViewHolder(
             viewBinding
         )
@@ -25,16 +36,15 @@ class GiphyTrendingAdapter : ListAdapter<GiphyDomainModel, GiphyTrendingAdapter.
         holder.bind(getItem(position))
     }
 
-    class ItemViewHolder(itemView: SingleItemGiphyBinding) : RecyclerView.ViewHolder(itemView.root) {
-
-        private val imageView: ImageView = itemView.ivGiphy
-
+    inner class ItemViewHolder(private val binding: SingleItemGiphyBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        private val imageView: ImageView = binding.ivGiphy
         fun bind(item: GiphyDomainModel) = with(itemView) {
-            Glide.with(this).asGif().load(item.url).into(imageView);
+            Glide.with(this).asGif().load(item.url)
+                .error(R.drawable.ic_error).into(imageView)
             imageView.transitionName = item.url
-
-            setOnClickListener {
-                // TODO: Handle on click
+            binding.lyGiphy.setOnClickListener {
+                callbacks?.onGiphyItemClick(it, item)
             }
         }
     }
@@ -43,7 +53,7 @@ class GiphyTrendingAdapter : ListAdapter<GiphyDomainModel, GiphyTrendingAdapter.
 class DiffCallback : DiffUtil.ItemCallback<GiphyDomainModel>() {
 
     override fun areItemsTheSame(oldItem: GiphyDomainModel, newItem: GiphyDomainModel): Boolean {
-        return oldItem?.url == newItem?.url
+        return oldItem?.id == newItem?.id
     }
 
     override fun areContentsTheSame(oldItem: GiphyDomainModel, newItem: GiphyDomainModel): Boolean {

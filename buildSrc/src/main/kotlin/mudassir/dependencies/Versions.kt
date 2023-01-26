@@ -36,6 +36,9 @@ object Versions {
     // Glide
     const val glide = "4.13.0"
 
+    //Room
+    const val room ="2.5.0"
+
     // Timber
     const val timber = "5.0.1"
 

@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mudassir.core.Status
 import com.mudassir.core.hideKeyboard
+import com.mudassir.domain.model.GiphyDomainModel
 import com.mudassir.giphyapi.Constants.SAVED_QUERY_KEY
 import com.mudassir.giphyapi.R
 import com.mudassir.giphyapi.databinding.FragmentTrendingGiphyBinding
@@ -26,7 +27,7 @@ import javax.inject.Inject
  * A simple [Fragment] subclass.
  * create an instance of this fragment.
  */
-class GiphyTrendingFragment : Fragment(), MenuProvider {
+class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Callbacks {
 
     val TAG = GiphyTrendingFragment.javaClass.name
 
@@ -105,6 +106,7 @@ class GiphyTrendingFragment : Fragment(), MenuProvider {
     }
 
     private fun initRecyclerView() {
+        giphyAdapter.setupListener(this)
         mBinding.rvGiphyList.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         mBinding.rvGiphyList.adapter = giphyAdapter
@@ -124,7 +126,7 @@ class GiphyTrendingFragment : Fragment(), MenuProvider {
         // getting search view of our item.
         val searchView: SearchView = searchItem.actionView as SearchView
 
-        searchView.setQuery(viewModel.giphyLiveDataEvent.value.toString(),false)
+        searchView.setQuery(viewModel.giphyLiveDataEvent.value.toString(), false)
         searchView.clearFocus()
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -152,5 +154,11 @@ class GiphyTrendingFragment : Fragment(), MenuProvider {
             }
             else -> false
         }
+    }
+
+    override fun onGiphyItemClick(view: View, item: GiphyDomainModel) {
+        Log.d(TAG, "onGiphyItemClick: $item")
+//        viewModel.addTofavourite.postValue(item)
+        viewModel.addTofav(item)
     }
 }
