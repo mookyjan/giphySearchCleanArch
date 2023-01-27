@@ -43,7 +43,7 @@ class GiphyTrendingAdapter :
             Glide.with(this).asGif().load(item.url)
                 .error(R.drawable.ic_error).into(imageView)
             imageView.transitionName = item.url
-            binding.lyGiphy.setOnClickListener {
+            binding.btnAddToFav.setOnClickListener {
                 callbacks?.onGiphyItemClick(it, item)
             }
         }
@@ -51,11 +51,9 @@ class GiphyTrendingAdapter :
 }
 
 class DiffCallback : DiffUtil.ItemCallback<GiphyDomainModel>() {
-
     override fun areItemsTheSame(oldItem: GiphyDomainModel, newItem: GiphyDomainModel): Boolean {
         return oldItem?.id == newItem?.id
     }
-
     override fun areContentsTheSame(oldItem: GiphyDomainModel, newItem: GiphyDomainModel): Boolean {
         return oldItem.id == newItem.id
     }

@@ -4,4 +4,6 @@
     <string name="home">Home</string>
     <string name="favourite">Favourite</string>
     <string name="search">Search</string>
+    <string name="addToFav">Add to Favourite</string>
+    <string name="removeFromFav">Remove From Fave</string>
 </resources>
