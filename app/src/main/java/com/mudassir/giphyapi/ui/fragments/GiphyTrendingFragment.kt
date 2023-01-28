@@ -42,6 +42,7 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
         GenericSavedStateViewModelFactory(detailViewModelFactory, this)
     }
     private val giphyAdapter = GiphyTrendingAdapter()
+    private var searchItem: MenuItem? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
@@ -75,6 +76,8 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
 
     private fun uiSetup() {
         mBinding.lyOffline.btnRetry.setOnClickListener {
+            searchItem?.collapseActionView()
+            (searchItem?.actionView as SearchView).onActionViewCollapsed()
             viewModel.onEnter("")
         }
     }
@@ -134,9 +137,9 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
         // Add menu items here
         menuInflater.inflate(R.menu.menu_toolbar_main, menu)
         // below line is to get our menu item.
-        val searchItem: MenuItem = menu.findItem(R.id.menu_search)
+        searchItem = menu.findItem(R.id.menu_search)
         // getting search view of our item.
-        val searchView: SearchView = searchItem.actionView as SearchView
+        val searchView: SearchView = searchItem?.actionView as SearchView
         val closeButton: ImageView =
             searchView.findViewById(androidx.appcompat.R.id.search_close_btn)
 
