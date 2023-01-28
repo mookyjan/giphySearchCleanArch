@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
 import com.mudassir.core.Resource
+import com.mudassir.core.Status
 import com.mudassir.domain.model.GiphyDomainModel
 import com.mudassir.domain.usecase.AddToFavouriteUseCase
 import com.mudassir.domain.usecase.GetFavouriteGiphyUseCase
@@ -30,12 +31,12 @@ class GiphyTrendingViewModelTest {
 
     private val observer = mockk<Observer<Resource<List<GiphyDomainModel>>>>(relaxed = true)
 
-    private lateinit var giphyUseCase: GiphyTrendingUseCase
+    private val giphyUseCase: GiphyTrendingUseCase = mockk()
     private lateinit var viewModel: GiphyTrendingViewModel
-    private lateinit var savedStateHandle: SavedStateHandle
-    private lateinit var favouriteGiphyUseCase: GetFavouriteGiphyUseCase
-    private lateinit var addToFavouriteUseCase: AddToFavouriteUseCase
-    private lateinit var removeFromFavouriteUseCase: RemoveFromFavouriteUseCase
+    private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
+    private val favouriteGiphyUseCase: GetFavouriteGiphyUseCase = mockk()
+    private val addToFavouriteUseCase: AddToFavouriteUseCase = mockk()
+    private val removeFromFavouriteUseCase: RemoveFromFavouriteUseCase = mockk()
 
     private val domainList = listOf(
         GiphyDomainModel(
@@ -51,17 +52,11 @@ class GiphyTrendingViewModelTest {
             rating = "G",
             url = "testurl2",
             type = "gif"
-        ),
+        )
     )
 
     @Before
-    fun setUp() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        giphyUseCase = mockk()
-        savedStateHandle = mockk(relaxed = true)
-        favouriteGiphyUseCase = mockk()
-        addToFavouriteUseCase = mockk()
-        removeFromFavouriteUseCase = mockk()
-
+    fun setUp() {
         coEvery { giphyUseCase.executeAsync(any()) } returns Resource.success(
             domainList
         )
@@ -76,16 +71,19 @@ class GiphyTrendingViewModelTest {
 
     @Test
     fun `Trending Giphy list will be fetched successfully`() {
+        //given
         viewModel.giphyLiveData.observeForever(observer)
 
+        //when
         viewModel.onEnter("")
-        coVerify(exactly = 1) { giphyUseCase.executeAsync(any()) }
 
+        //then
+        coVerify(exactly = 1) { giphyUseCase.executeAsync(any()) }
 
         coroutinesTestRule.testDispatcher.resumeDispatcher()
 
         val result = viewModel.giphyLiveData.value
-
+        assertEquals(Status.SUCCESS, result?.status)
         assertEquals(domainList, result?.data)
     }
 
@@ -103,7 +101,7 @@ class GiphyTrendingViewModelTest {
         coroutinesTestRule.testDispatcher.resumeDispatcher()
 
         val result = viewModel.giphyLiveData.value
-        assertEquals("ERROR", result?.status?.name)
+        assertEquals(Status.ERROR, result?.status)
         assertEquals(null, result?.data)
     }
 
