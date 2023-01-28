@@ -61,6 +61,7 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
         val query = savedInstanceState?.getString(SAVED_QUERY_KEY) ?: ""
         Log.d(TAG, "onViewCreated: $query   ${viewModel.giphyLiveDataEvent.value}")
         observeEvents()
+        uiSetup()
         initRecyclerView()
         //setup for the new menu options , the old one is deprecated
         val menuHost: MenuHost = requireActivity()
@@ -70,6 +71,12 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SAVED_QUERY_KEY, viewModel.giphyLiveDataEvent.value.toString())
+    }
+
+    private fun uiSetup() {
+        mBinding.lyOffline.btnRetry.setOnClickListener {
+            viewModel.onEnter("")
+        }
     }
 
     private fun observeEvents() {
@@ -82,16 +89,23 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
                 }
                 Status.SUCCESS -> {
                     hideProgressBar()
+                    //hide the error layout
+                    mBinding.lyOffline.root.visibility = View.GONE
                     Log.d(TAG, "observeEvents: Success")
                     giphyAdapter.submitList(it.data)
                 }
                 Status.EMPTY -> {
                     hideProgressBar()
                     Log.d(TAG, "observeEvents: Empty")
+                    //show the error layout
+                    mBinding.lyOffline.root.visibility = View.VISIBLE
+                    mBinding.lyOffline.tvErrorDetail.text = getString(R.string.txt_no_result)
                 }
                 Status.ERROR -> {
                     hideProgressBar()
                     Log.d(TAG, "observeEvents: Error ${it.data}")
+                    mBinding.lyOffline.root.visibility = View.VISIBLE
+                    mBinding.lyOffline.tvErrorDetail.text = getString(R.string.txt_error_description)
                 }
             }
         })
