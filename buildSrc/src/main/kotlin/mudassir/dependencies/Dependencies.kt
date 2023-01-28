@@ -1,5 +1,14 @@
 package mudassir.dependencies
 
+
+object App {
+    const val applicationId = "com.mudassir.giphyapi"
+    const val compileSdk = 33
+    const val minSdk = 21
+    const val targetSdk = 33
+    const val versionCode = 1
+    const val versionName = "1.0.0"
+}
 object Dependencies {
     // Core
     const val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}"

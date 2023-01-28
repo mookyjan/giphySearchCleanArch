@@ -1,4 +1,5 @@
 import mudassir.dependencies.Dependencies
+import mudassir.dependencies.App
 
 plugins {
    id  'com.android.library'
@@ -6,25 +7,14 @@ plugins {
 }
 
 android {
-
-    compileSdkVersion 33
-
+    compileSdkVersion App.compileSdk
     defaultConfig {
-        minSdkVersion 24
-        targetSdkVersion 31
-        versionCode 1
-        versionName "1.0"
-
+        minSdkVersion App.minSdk
+        targetSdkVersion App.targetSdk
+        versionCode App.versionCode
+        versionName App.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-
 }
 
 dependencies {
