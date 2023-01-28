@@ -4,4 +4,11 @@
     <string name="home">Home</string>
     <string name="favourite">Favourite</string>
     <string name="search">Search</string>
+    <string name="addToFav">Add to Favourite</string>
+    <string name="removeFromFav">Remove From Fave</string>
+    <string name="txt_error_title">Something went Wrong ...</string>
+    <string name="txt_error_description">An alien is probably blocking signal.</string>
+    <string name="btn_retry">Retry</string>
+    <string name="txt_no_internet">No Internet Connection Please Try Again</string>
+    <string name="txt_no_result">We are sorry no result found.</string>
 </resources>

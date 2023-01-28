@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mudassir.core.Status
 import com.mudassir.domain.model.GiphyDomainModel
@@ -62,7 +63,7 @@ class FavouritesFragment : Fragment(), FavouriteAdapter.Callbacks {
     private fun initRecyclerView() {
         favouriteListAdapter.setupListener(this)
         mBinding?.rvFavouriteList?.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            GridLayoutManager(context, 2)
         mBinding?.rvFavouriteList?.adapter = favouriteListAdapter
     }
 

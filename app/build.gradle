@@ -1,3 +1,4 @@
+import mudassir.dependencies.App
 import mudassir.dependencies.Dependencies
 
 plugins {
@@ -8,14 +9,14 @@ plugins {
 
 android {
     namespace 'com.mudassir.giphyapi'
-    compileSdk 33
+    compileSdk App.compileSdk
 
     defaultConfig {
-        applicationId "com.mudassir.giphyapi"
-        minSdk 24
-        targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        applicationId App.applicationId
+        minSdkVersion App.minSdk
+        targetSdkVersion App.targetSdk
+        versionCode App.versionCode
+        versionName App.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

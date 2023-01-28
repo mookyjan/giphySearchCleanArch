@@ -1,3 +1,4 @@
+import mudassir.dependencies.App
 import mudassir.dependencies.Dependencies
 
 plugins {
@@ -6,11 +7,13 @@ plugins {
     id  'kotlin-kapt'
 }
 android {
-    compileSdkVersion 33
+    compileSdkVersion App.compileSdk
 
     defaultConfig {
-        minSdkVersion 24
-        targetSdkVersion 33
+        minSdkVersion App.minSdk
+        targetSdkVersion App.targetSdk
+        versionCode App.versionCode
+        versionName App.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -38,16 +41,17 @@ dependencies {
     implementation Dependencies.moshi_adapter
     api Dependencies.moshi_converter
 
-
+    //Dagger
     kapt Dependencies.dagger_compiler
     kapt Dependencies.dagger_android_processor
 
+    //Retrofit
     implementation Dependencies.retrofit
     implementation Dependencies.okHttp
     api Dependencies.logging
 
-    def room = "2.5.0"
-    api "androidx.room:room-ktx:2.5.0"
-    api "androidx.room:room-runtime:2.5.0"
-    kapt "androidx.room:room-compiler:2.5.0"
+    //Room
+    api Dependencies.roomKtx
+    api Dependencies.roomRuntime
+    kapt Dependencies.roomCompiler
 }

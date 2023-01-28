@@ -43,7 +43,8 @@ class FavouriteAdapter :
             Glide.with(this).asGif().load(item.url)
                 .error(R.drawable.ic_error).into(imageView)
             imageView.transitionName = item.url
-            binding.lyGiphy.setOnClickListener {
+            binding.btnAddToFav.text = context.getString(R.string.removeFromFav)
+            binding.btnAddToFav.setOnClickListener {
                 callbacks?.onGiphyItemClick(it, item)
             }
         }

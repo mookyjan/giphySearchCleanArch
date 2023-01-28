@@ -42,6 +42,7 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
         GenericSavedStateViewModelFactory(detailViewModelFactory, this)
     }
     private val giphyAdapter = GiphyTrendingAdapter()
+    private var searchItem: MenuItem? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
@@ -61,6 +62,7 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
         val query = savedInstanceState?.getString(SAVED_QUERY_KEY) ?: ""
         Log.d(TAG, "onViewCreated: $query   ${viewModel.giphyLiveDataEvent.value}")
         observeEvents()
+        uiSetup()
         initRecyclerView()
         //setup for the new menu options , the old one is deprecated
         val menuHost: MenuHost = requireActivity()
@@ -70,6 +72,14 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SAVED_QUERY_KEY, viewModel.giphyLiveDataEvent.value.toString())
+    }
+
+    private fun uiSetup() {
+        mBinding.lyOffline.btnRetry.setOnClickListener {
+            searchItem?.collapseActionView()
+            (searchItem?.actionView as SearchView).onActionViewCollapsed()
+            viewModel.onEnter("")
+        }
     }
 
     private fun observeEvents() {
@@ -82,16 +92,23 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
                 }
                 Status.SUCCESS -> {
                     hideProgressBar()
+                    //hide the error layout
+                    mBinding.lyOffline.root.visibility = View.GONE
                     Log.d(TAG, "observeEvents: Success")
                     giphyAdapter.submitList(it.data)
                 }
                 Status.EMPTY -> {
                     hideProgressBar()
                     Log.d(TAG, "observeEvents: Empty")
+                    //show the error layout
+                    mBinding.lyOffline.root.visibility = View.VISIBLE
+                    mBinding.lyOffline.tvErrorDetail.text = getString(R.string.txt_no_result)
                 }
                 Status.ERROR -> {
                     hideProgressBar()
                     Log.d(TAG, "observeEvents: Error ${it.data}")
+                    mBinding.lyOffline.root.visibility = View.VISIBLE
+                    mBinding.lyOffline.tvErrorDetail.text = getString(R.string.txt_error_description)
                 }
             }
         })
@@ -120,9 +137,9 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
         // Add menu items here
         menuInflater.inflate(R.menu.menu_toolbar_main, menu)
         // below line is to get our menu item.
-        val searchItem: MenuItem = menu.findItem(R.id.menu_search)
+        searchItem = menu.findItem(R.id.menu_search)
         // getting search view of our item.
-        val searchView: SearchView = searchItem.actionView as SearchView
+        val searchView: SearchView = searchItem?.actionView as SearchView
         val closeButton: ImageView =
             searchView.findViewById(androidx.appcompat.R.id.search_close_btn)
 
