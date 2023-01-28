@@ -19,7 +19,6 @@ class GiphyTrendingUseCase @Inject constructor(
             if (trendingList.isEmpty()) return Resource.empty(errorFactory.createEmptyErrorMessage())
             Resource.success(trendingList)
         } catch (ex: Exception) {
-            Log.d("UseCaseError", "executeAsync:  $ex")
             Resource.error(errorFactory.createApiErrorMessage(ex))
         }
     }

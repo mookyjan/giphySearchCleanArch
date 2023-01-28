@@ -18,11 +18,11 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideGiphyMapper() = GiphyDataToDomainMapper()
+    internal fun provideGiphyMapper() = GiphyDataToDomainMapper()
 
 
     @Provides
-    fun provideGiphyRemoteDataSource(giphyService: GiphyService) =
+    internal fun provideGiphyRemoteDataSource(giphyService: GiphyService) =
         GiphyTrendingRemoteDataSource(giphyService)
 
 
