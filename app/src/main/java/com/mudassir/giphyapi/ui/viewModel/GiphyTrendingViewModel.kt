@@ -22,7 +22,12 @@ class GiphyTrendingViewModel constructor(
     private val removeFromFavouriteUseCase: RemoveFromFavouriteUseCase
 ) : ViewModel() {
 
+    //variable to hold data of search query
     val giphyLiveDataEvent = MutableLiveData<String?>()
+
+    /**
+     * function to be called when user enter the search query
+     */
     fun onEnter(query: String? = (state.get<String>(SAVED_QUERY_KEY)) ?: "") {
         giphyLiveDataEvent.value = query
     }
@@ -31,27 +36,18 @@ class GiphyTrendingViewModel constructor(
         onEnter()
     }
 
-    val giphyFlowList : LiveData<PagingData<GiphyDomainModel>> =
-        giphyLiveDataEvent.switchMap { query ->
-            state[SAVED_QUERY_KEY] = query
-            getGiphyList().asLiveData()
-        }
-
-
-
-//    val giphyLiveDataEvent = MutableLiveData<String?>()
-//
-
-    fun getGiphyList(): Flow<PagingData<GiphyDomainModel>> {
-        return trendingUseCase.executeAsync(giphyLiveDataEvent.value.toString()).cachedIn(viewModelScope)
-    }
-
+    /**
+     * setup to get the list of giphy
+     */
     val giphyLiveData: LiveData<Resource<Flow<PagingData<GiphyDomainModel>>>> =
         giphyLiveDataEvent.switchMap { query ->
             state[SAVED_QUERY_KEY] = query
             liveData {
                 emit(Resource.loading(null))
                 val result = trendingUseCase.executeAsync(query).cachedIn(viewModelScope)
+                result.catch {
+                    emit(Resource.error("${it.localizedMessage}"))
+                }
                 emit(Resource.success(result))
             }
         }

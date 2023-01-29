@@ -74,7 +74,6 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
         Log.d(TAG, "onViewCreated: $query   ${viewModel.giphyLiveDataEvent.value}")
         observeEvents()
         uiSetup()
-//        observeFlowData()
         initRecyclerView()
         setupForAdapter()
         //setup for the new menu options , the old one is deprecated
@@ -95,16 +94,6 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
         }
     }
 
-    private fun observeFlowData() {
-        viewModel.giphyFlowList.observe(viewLifecycleOwner, Observer {
-            mBinding.lyOffline.root.hide()
-            mBinding.rvGiphyList.show()
-            lifecycleScope.launch {
-                giphyAdapter.submitData(it)
-            }
-        })
-    }
-
     private fun observeEvents() {
         viewModel.giphyLiveData.observe(viewLifecycleOwner, Observer {
             when (it.status) {
@@ -118,8 +107,8 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
                     mBinding.lyOffline.root.hide()
                     Log.d(TAG, "observeEvents: Success")
                     lifecycleScope.launch {
-                        it.data?.collectLatest {
-                            giphyAdapter.submitData(it)
+                        it.data?.collectLatest { data ->
+                            giphyAdapter.submitData(data)
                         }
                     }
                 }
@@ -168,13 +157,22 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
                 ?: loadState.append as? LoadState.Error
                 ?: loadState.prepend as? LoadState.Error
 
-            if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached) {
+            /**
+             * show the loading bar when launch the app first time
+             */
+            if (loadState.source.refresh is LoadState.Loading) {
+                showProgressBar()
+            } else {
+                hideProgressBar()
+            }
+
+            if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && giphyAdapter.itemCount < 1) {
                 //when the list is empty for the first time or for the search result
-                if ( giphyAdapter.itemCount < 1){
+//                if ( giphyAdapter.itemCount < 1){
                     /// show empty view
                     mBinding.lyOffline.root.show()
                     mBinding.lyOffline.tvErrorDetail.text = getString(R.string.txt_no_result)
-                }
+//                }
             }
             errorState?.let {
                 AlertDialog.Builder(view?.context)
