@@ -87,6 +87,9 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
     }
 
     private fun uiSetup() {
+        /**
+         * when user click on Retry button so call the api again
+         */
         mBinding.lyOffline.btnRetry.setOnClickListener {
             searchItem?.collapseActionView()
             (searchItem?.actionView as SearchView).onActionViewCollapsed()
@@ -166,14 +169,13 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
                 hideProgressBar()
             }
 
+            //when the list is empty for the first time or for the search result
             if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && giphyAdapter.itemCount < 1) {
-                //when the list is empty for the first time or for the search result
-//                if ( giphyAdapter.itemCount < 1){
-                    /// show empty view
+                    // show empty view
                     mBinding.lyOffline.root.show()
                     mBinding.lyOffline.tvErrorDetail.text = getString(R.string.txt_no_result)
-//                }
             }
+            //TODO update this error case scenario
             errorState?.let {
                 AlertDialog.Builder(view?.context)
                     .setTitle(R.string.txt_error)
@@ -212,6 +214,7 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 searchView?.hideKeyboard()
+                giphyAdapter.submitData(lifecycle, PagingData.empty())
                 viewModel.onEnter(query)
                 return true
             }
@@ -228,6 +231,7 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
             //when click on cross icon so reset to the trending api
             searchView.clearFocus()
             searchView.onActionViewCollapsed()
+            giphyAdapter.submitData(lifecycle, PagingData.empty())
             viewModel.onEnter("")
         }
 
