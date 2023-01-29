@@ -18,11 +18,14 @@ class GiphyTrendingViewModel constructor(
     private val removeFromFavouriteUseCase: RemoveFromFavouriteUseCase
 ) : ViewModel() {
 
+    val giphyLiveDataEvent = MutableLiveData<String?>()
+    init {
+        onEnter()
+    }
     fun onEnter(query: String? = (state.get<String>(SAVED_QUERY_KEY)) ?: "") {
         giphyLiveDataEvent.value = query
     }
 
-    val giphyLiveDataEvent = MutableLiveData<String?>()
     val giphyLiveData: LiveData<Resource<List<GiphyDomainModel>>> =
         giphyLiveDataEvent.switchMap { query ->
             state[SAVED_QUERY_KEY] = query

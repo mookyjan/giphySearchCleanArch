@@ -83,7 +83,6 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
     }
 
     private fun observeEvents() {
-        viewModel.onEnter()
         viewModel.giphyLiveData.observe(viewLifecycleOwner, Observer {
             when (it.status) {
                 Status.LOADING -> {
