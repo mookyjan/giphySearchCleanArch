@@ -29,6 +29,9 @@ object Versions {
     // Lifecycle
     const val lifecycle = "2.5.1"
 
+    //LiveData
+    const val liveData = "2.5.1"
+
     // DI
     const val dagger = "2.44.2"
     const val javax = "10.0-b28"

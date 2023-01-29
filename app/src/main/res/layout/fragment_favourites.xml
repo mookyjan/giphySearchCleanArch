@@ -21,17 +21,21 @@
         app:spanCount="2"
         tools:listitem="@layout/single_item_giphy" />
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:layout_width="wrap_content"
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/progress_circular"
+        android:id="@+id/tv_empty_text"
+        android:textStyle="bold"
+        android:gravity="center"
         android:visibility="gone"
         android:indeterminate="true"
         tools:visibility="visible"
         style="@style/Widget.Material3.CircularProgressIndicator"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="@dimen/text_size_large"
         app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/txt_no_favourite"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         />
 

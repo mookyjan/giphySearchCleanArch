@@ -3,7 +3,6 @@ package com.mudassir.giphyapi.ui.viewModel
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.room.util.query
 import com.mudassir.core.Resource
 import com.mudassir.domain.model.GiphyDomainModel
 import com.mudassir.domain.usecase.AddToFavouriteUseCase
@@ -11,7 +10,8 @@ import com.mudassir.domain.usecase.GetFavouriteGiphyUseCase
 import com.mudassir.domain.usecase.GiphyTrendingUseCase
 import com.mudassir.domain.usecase.RemoveFromFavouriteUseCase
 import com.mudassir.giphyapi.util.Constants.SAVED_QUERY_KEY
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class GiphyTrendingViewModel constructor(
@@ -52,26 +52,23 @@ class GiphyTrendingViewModel constructor(
             }
         }
 
-    var addToFavouriteEvent = MutableLiveData<Unit>()
-    private val favouriteList: LiveData<Resource<List<GiphyDomainModel>>> =
-        addToFavouriteEvent.switchMap {
-            liveData {
-                emit(Resource.loading(null))
-                val result = favouriteGiphyUseCase.executeAsync()
-                emit(result)
-            }
-        }
+    /**
+     * get list of favourite gifs
+     */
+    val favouriteList: LiveData<List<GiphyDomainModel>> = favouriteGiphyUseCase.execute()
 
-    fun getFavList(): LiveData<Resource<List<GiphyDomainModel>>> {
-        return favouriteList
-    }
-
+    /**
+     * add gifs to favourite
+     */
     fun addToFavourite(domainModel: GiphyDomainModel) {
         viewModelScope.launch {
             addToFavouriteUseCase.executeAsync(domainModel)
         }
     }
 
+    /**
+     * remove gifs from favourite list
+     */
     fun removeFromFavourite(domainModel: GiphyDomainModel) {
         viewModelScope.launch {
             removeFromFavouriteUseCase.executeAsync(domainModel)

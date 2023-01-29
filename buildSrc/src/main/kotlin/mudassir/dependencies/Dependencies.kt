@@ -19,7 +19,7 @@ object Dependencies {
     const val activity_ktx = "androidx.activity:activity-ktx:${Versions.activity_ktx}"
     const val core_ktx = "androidx.core:core-ktx:${Versions.core_ktx}"
     const val android_annotation = "androidx.annotation:annotation:${Versions.android_annotation}"
-
+    const val livedata_core = "androidx.lifecycle:lifecycle-livedata-core-ktx:${Versions.liveData}"
 
     //Navigation
     const val navigation_fragment = "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
