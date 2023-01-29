@@ -4,8 +4,8 @@
 
 ### Important  ###
 There are two branches for this project
-1) Develop -> In this branch api is call only once data is loaded and user can search and make favourite/ UnFavourite
-2) develop_pagination -> this branch have additional setup for pagination so user can scroll unlimited number of gifs
+1) [Develop](https://github.com/mookyjan/giphySearchCleanArch/tree/develop) -> In this branch api is call only once data is loaded and user can search and make favourite/ UnFavourite
+2) [develop_pagination](https://github.com/mookyjan/giphySearchCleanArch/tree/develop_pagination) -> this branch have additional setup for pagination so user can scroll unlimited number of gifs
 
 
 ### Structure of the code ###
