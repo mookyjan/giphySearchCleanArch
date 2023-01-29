@@ -19,8 +19,10 @@ class GiphyTrendingViewModel constructor(
 ) : ViewModel() {
 
     val giphyLiveDataEvent = MutableLiveData<String?>()
+    val addToFavouriteEvent = MutableLiveData<Unit>()
     init {
         onEnter()
+//       addToFavouriteEvent.value = Unit
     }
     fun onEnter(query: String? = (state.get<String>(SAVED_QUERY_KEY)) ?: "") {
         giphyLiveDataEvent.value = query
@@ -36,19 +38,21 @@ class GiphyTrendingViewModel constructor(
             }
         }
 
-    var addToFavouriteEvent = MutableLiveData<Unit>()
-    private val favouriteList: LiveData<Resource<List<GiphyDomainModel>>> =
-        addToFavouriteEvent.switchMap {
-            liveData {
-                emit(Resource.loading(null))
-                val result = favouriteGiphyUseCase.executeAsync()
-                emit(result)
-            }
-        }
+//    private val favouriteList: LiveData<Resource<List<GiphyDomainModel>>> =
+//        addToFavouriteEvent.switchMap {
+//            liveData {
+//                emit(Resource.loading(null))
+//                val result = favouriteGiphyUseCase.executeAsync()
+//                emit(result)
+//            }
+//        }
 
-    fun getFavList(): LiveData<Resource<List<GiphyDomainModel>>> {
-        return favouriteList
-    }
+    val favouriteList: LiveData<List<GiphyDomainModel>> = favouriteGiphyUseCase.execute()
+
+
+//    fun getFavList(): LiveData<Resource<List<GiphyDomainModel>>> {
+//        return favouriteList
+//    }
 
     fun addToFavourite(domainModel: GiphyDomainModel) {
         viewModelScope.launch {

@@ -24,6 +24,7 @@ android {
 dependencies {
 
     implementation project(path: ':core')
+    api Dependencies.livedata_core
     kapt Dependencies.dagger_compiler
     api Dependencies.dagger_android
     kapt Dependencies.dagger_android_processor

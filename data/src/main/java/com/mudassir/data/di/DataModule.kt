@@ -20,16 +20,18 @@ class DataModule {
     @Singleton
     internal fun provideGiphyMapper() = GiphyDataToDomainMapper()
 
-
+    @Singleton
     @Provides
     internal fun provideGiphyRemoteDataSource(giphyService: GiphyService) =
         GiphyTrendingRemoteDataSource(giphyService)
 
 
     @Provides
+    @Singleton
     internal fun provideGiphyDatabase(context: Context) = GiphyDatabase.newInstance(context)
 
     @Provides
+    @Singleton
     internal fun provideGiphyLocalDataSource(giphyDao: GiphyDao) =
         GiphyTrendingLocalDataSource(giphyDao)
 

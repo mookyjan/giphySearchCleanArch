@@ -35,4 +35,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_empty_text"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textSize="@dimen/text_size_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/txt_no_favourite"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

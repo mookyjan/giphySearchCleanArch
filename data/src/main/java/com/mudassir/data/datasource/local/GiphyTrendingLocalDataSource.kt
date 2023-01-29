@@ -1,11 +1,12 @@
 package com.mudassir.data.datasource.local
 
+import androidx.lifecycle.LiveData
 import com.mudassir.data.datasource.local.dao.GiphyDao
 import com.mudassir.data.datasource.local.model.GiphyEntityModel
 
 internal class GiphyTrendingLocalDataSource(private val giphyDao: GiphyDao) {
 
-    suspend fun getFavouriteGiphyList(): List<GiphyEntityModel> {
+     fun getFavouriteGiphyList(): LiveData<List<GiphyEntityModel>> {
         return giphyDao.getAll()
     }
 

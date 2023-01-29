@@ -56,6 +56,8 @@ dependencies {
     api Dependencies.roomRuntime
     kapt Dependencies.roomCompiler
 
+    implementation Dependencies.lifecycle_livedata_ktx
+
     //Test
     testImplementation TestDependencies.junit
     testImplementation TestDependencies.mockK

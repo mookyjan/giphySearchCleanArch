@@ -1,5 +1,6 @@
 package com.mudassir.domain.repository
 
+import androidx.lifecycle.LiveData
 import com.mudassir.domain.model.GiphyDomainModel
 
 interface GiphyRepository {
@@ -8,7 +9,7 @@ interface GiphyRepository {
 
     suspend fun addToFavourite(giphyDomainModel: GiphyDomainModel)
 
-    suspend fun getFavouriteGiphyList(): List<GiphyDomainModel>
+    fun getFavouriteGiphyList(): LiveData<List<GiphyDomainModel>>
 
     suspend fun removeFromFavouriteList(giphyDomainModel: GiphyDomainModel)
 }

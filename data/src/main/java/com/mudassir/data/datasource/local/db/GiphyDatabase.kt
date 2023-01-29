@@ -12,13 +12,23 @@ internal abstract class GiphyDatabase : RoomDatabase() {
 
     abstract fun giphys(): GiphyDao
 
-    companion object{
+    companion object {
+
+        @Volatile
+        private var INSTANCE: GiphyDatabase? = null
         fun newInstance(context: Context): GiphyDatabase {
-            return Room.databaseBuilder(context,
-                GiphyDatabase::class.java,
-                "giphy.db")
-                .fallbackToDestructiveMigration()
-                .build()
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context,
+                    GiphyDatabase::class.java,
+                    "giphy.db"
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
+                INSTANCE = instance
+                // return instance
+                instance
+            }
         }
     }
 }

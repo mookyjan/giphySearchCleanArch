@@ -1,5 +1,6 @@
 package com.mudassir.data.datasource.local.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.mudassir.data.datasource.local.model.GiphyEntityModel
 
@@ -7,7 +8,7 @@ import com.mudassir.data.datasource.local.model.GiphyEntityModel
 internal interface GiphyDao {
 
     @Query("SELECT * FROM giphys")
-    suspend fun getAll(): List<GiphyEntityModel>
+    fun getAll(): LiveData<List<GiphyEntityModel>>
 
     @Query("SELECT * FROM giphys where title = :title")
     suspend fun getGiphy(title: String): GiphyEntityModel

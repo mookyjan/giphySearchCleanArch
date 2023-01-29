@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.mudassir.core.Status
+import com.mudassir.core.hide
+import com.mudassir.core.show
 import com.mudassir.domain.model.GiphyDomainModel
 import com.mudassir.giphyapi.databinding.FragmentFavouritesBinding
 import com.mudassir.giphyapi.di.modules.GenericSavedStateViewModelFactory
@@ -26,7 +28,7 @@ import javax.inject.Inject
  */
 class FavouritesFragment : Fragment(), FavouriteAdapter.Callbacks {
 
-    val TAG = GiphyTrendingFragment.javaClass.name
+    private val TAG: String = GiphyTrendingFragment.Companion::class.java.name
     private var mBinding: FragmentFavouritesBinding? = null
 
     @Inject
@@ -55,9 +57,9 @@ class FavouritesFragment : Fragment(), FavouriteAdapter.Callbacks {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.addToFavouriteEvent.value = Unit
         observeEvents()
         initRecyclerView()
+
     }
 
     private fun initRecyclerView() {
@@ -68,27 +70,42 @@ class FavouritesFragment : Fragment(), FavouriteAdapter.Callbacks {
     }
 
     private fun observeEvents() {
-        viewModel.getFavList().observe(viewLifecycleOwner, Observer {
-            when (it.status) {
-                Status.LOADING -> {
-                    Log.d(TAG, "observeEvents: Loading")
-                    showProgressBar()
-                }
-                Status.SUCCESS -> {
-                    hideProgressBar()
-                    Log.d(TAG, "observeEvents: Success ${it.data?.size}")
-                    favouriteListAdapter.submitList(it.data)
-                }
-                Status.EMPTY -> {
-                    hideProgressBar()
-                    Log.d(TAG, "observeEvents: Empty")
-                }
-                Status.ERROR -> {
-                    hideProgressBar()
-                    Log.d(TAG, "observeEvents: Error ${it.data}")
-                }
+
+        viewModel.favouriteList.observe(viewLifecycleOwner, Observer {
+            Log.d(TAG, "observeEvents: Success ${it?.size}")
+            if (it.isEmpty()) {
+                showErrorText()
+            } else {
+                hideErrorText()
+                favouriteListAdapter.submitList(it)
             }
+
         })
+
+//        viewModel.getFavList().observe(viewLifecycleOwner) {
+//            when (it.status) {
+//                Status.LOADING -> {
+//                    Log.d(TAG, "observeEvents: Loading")
+//                    showProgressBar()
+//                }
+//                Status.SUCCESS -> {
+//                    hideProgressBar()
+//                    hideErrorText()
+//                    Log.d(TAG, "observeEvents: Success ${it.data?.size}")
+//                    favouriteListAdapter.submitList(it.data)
+//                }
+//                Status.EMPTY -> {
+//                    hideProgressBar()
+//                    showErrorText()
+//                    Log.d(TAG, "observeEvents: Empty")
+//                }
+//                Status.ERROR -> {
+//                    hideProgressBar()
+//                    showErrorText()
+//                    Log.d(TAG, "observeEvents: Error ${it.data}")
+//                }
+//            }
+//        }
     }
 
     private fun showProgressBar() {
@@ -99,9 +116,18 @@ class FavouritesFragment : Fragment(), FavouriteAdapter.Callbacks {
         mBinding?.progressCircular?.hide()
     }
 
+    private fun showErrorText() {
+        mBinding?.rvFavouriteList?.hide()
+        mBinding?.tvEmptyText?.show()
+    }
+
+    private fun hideErrorText() {
+        mBinding?.rvFavouriteList?.show()
+        mBinding?.tvEmptyText?.hide()
+    }
+
     override fun onGiphyItemClick(view: View, item: GiphyDomainModel) {
         viewModel.removeFromFavourite(item)
-        viewModel.addToFavouriteEvent.value = Unit
     }
 
 }
