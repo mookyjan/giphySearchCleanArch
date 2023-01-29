@@ -1,10 +1,12 @@
 package com.mudassir.data.repository
 
-import com.mudassir.data.datasource.remote.GiphyTrendingRemoteDataSource
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import com.mudassir.data.datasource.local.GiphyTrendingLocalDataSource
 import com.mudassir.data.datasource.local.model.GiphyEntityModel
 import com.mudassir.data.datasource.local.model.toDomainModel
 import com.mudassir.data.datasource.local.model.toEntityModel
+import com.mudassir.data.datasource.remote.GiphyTrendingRemoteDataSource
 import com.mudassir.data.mapper.GiphyDataToDomainMapper
 import com.mudassir.domain.model.GiphyDomainModel
 import com.mudassir.domain.repository.GiphyRepository
@@ -19,10 +21,13 @@ internal class GiphyRepositoryImpl(
         return giphyDataToDomainMapper.invoke(list)
     }
 
-    override suspend fun getFavouriteGiphyList(): List<GiphyDomainModel> {
+    override fun getFavouriteGiphyList(): LiveData<List<GiphyDomainModel>> {
         val list = giphyTrendingLocalDataSource.getFavouriteGiphyList()
         val transform: (GiphyEntityModel) -> GiphyDomainModel = { it.toDomainModel() }
-        return list.map(transform)
+        val favList: LiveData<List<GiphyDomainModel>> = Transformations.map(list) {
+            it.map(transform)
+        }
+        return favList
     }
 
     override suspend fun addToFavourite(giphyDomainModel: GiphyDomainModel) {

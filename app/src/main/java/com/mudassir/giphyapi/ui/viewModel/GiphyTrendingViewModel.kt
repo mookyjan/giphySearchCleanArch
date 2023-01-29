@@ -19,9 +19,14 @@ class GiphyTrendingViewModel constructor(
 ) : ViewModel() {
 
     val giphyLiveDataEvent = MutableLiveData<String?>()
+
     init {
         onEnter()
     }
+
+    /**
+     * method to be called when user enter query for search
+     */
     fun onEnter(query: String? = (state.get<String>(SAVED_QUERY_KEY)) ?: "") {
         giphyLiveDataEvent.value = query
     }
@@ -36,26 +41,23 @@ class GiphyTrendingViewModel constructor(
             }
         }
 
-    var addToFavouriteEvent = MutableLiveData<Unit>()
-    private val favouriteList: LiveData<Resource<List<GiphyDomainModel>>> =
-        addToFavouriteEvent.switchMap {
-            liveData {
-                emit(Resource.loading(null))
-                val result = favouriteGiphyUseCase.executeAsync()
-                emit(result)
-            }
-        }
+    /**
+     * get list of favourite gifs
+     */
+    val favouriteList: LiveData<List<GiphyDomainModel>> = favouriteGiphyUseCase.execute()
 
-    fun getFavList(): LiveData<Resource<List<GiphyDomainModel>>> {
-        return favouriteList
-    }
-
+    /**
+     * add gifs to favourite
+     */
     fun addToFavourite(domainModel: GiphyDomainModel) {
         viewModelScope.launch {
             addToFavouriteUseCase.executeAsync(domainModel)
         }
     }
 
+    /**
+     * remove gifs from favourite list
+     */
     fun removeFromFavourite(domainModel: GiphyDomainModel) {
         viewModelScope.launch {
             removeFromFavouriteUseCase.executeAsync(domainModel)

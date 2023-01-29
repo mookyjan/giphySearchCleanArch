@@ -16,8 +16,8 @@ class DomainModule {
         GiphyTrendingUseCase(giphyRepository, errorFactory)
 
     @Provides
-    fun provideFavouriteUseCase(giphyRepository: GiphyRepository, errorFactory: ErrorFactory) =
-        GetFavouriteGiphyUseCase(giphyRepository, errorFactory)
+    fun provideFavouriteUseCase(giphyRepository: GiphyRepository) =
+        GetFavouriteGiphyUseCase(giphyRepository)
 
     @Provides
     fun provideRemoveFromFavouriteUseCase(giphyRepository: GiphyRepository, errorFactory: ErrorFactory) =
