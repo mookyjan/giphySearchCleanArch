@@ -1,5 +1,13 @@
 # Giphy-App
 
+
+
+### Important  ###
+There are two branches for this project
+1) [Develop](https://github.com/mookyjan/giphySearchCleanArch/tree/develop) -> In this branch api is call only once data is loaded and user can search and make favourite/ UnFavourite
+2) [develop_pagination](https://github.com/mookyjan/giphySearchCleanArch/tree/develop_pagination) -> this branch have additional setup for pagination so user can scroll unlimited number of gifs
+
+
 ### Structure of the code ###
 Simple Android Application written in Kotlin.
 This project follows Clean Architecture with MVVM with Clean Architecture Design
@@ -30,11 +38,11 @@ Project consist of One Activity and Two Fragments
 
 
 # Architecture Design
-![alt text](https://github.com/mookyjan/giphySearchCleanArch/tree/develop_pagination/diagram/clean%20architecture%20design.png)
+![alt text](https://github.com/mookyjan/giphySearchCleanArch/blob/develop_pagination/diagram/clean%20architecture%20design.png)
 
-![alt text](https://github.com/mookyjan/giphySearchCleanArch/tree/develop_pagination/diagram/clean-mvvm.png)
+![alt text](https://github.com/mookyjan/giphySearchCleanArch/blob/develop_pagination/diagram/clean-mvvm.png)
 
-![alt text](https://github.com/mookyjan/giphySearchCleanArch/tree/develop_pagination/diagram/project%20structure.png)
+![alt text](https://github.com/mookyjan/giphySearchCleanArch/blob/develop_pagination/diagram/project%20structure.png)
 
 
 # Modules
@@ -82,8 +90,11 @@ also TODO are given in the area which we can improve more.
 ##TODO
 
 need to make offline mode fist app
+
 adding more unit test cases
+
 setup for CI/CD
+
 improving the design
 
 
