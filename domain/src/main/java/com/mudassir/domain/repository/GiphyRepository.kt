@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface GiphyRepository {
 
-    suspend fun getTrendingGiphy(query: String?): Flow<PagingData<GiphyDomainModel>>
+     fun getTrendingGiphy(query: String?): Flow<PagingData<GiphyDomainModel>>
 
     suspend fun addToFavourite(giphyDomainModel: GiphyDomainModel)
 

@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mudassir.domain.model.GiphyDomainModel
@@ -55,7 +54,7 @@ class GiphyTrendingAdapter :
 
 class DiffCallback : DiffUtil.ItemCallback<GiphyDomainModel>() {
     override fun areItemsTheSame(oldItem: GiphyDomainModel, newItem: GiphyDomainModel): Boolean {
-        return oldItem?.id == newItem?.id
+        return oldItem == newItem
     }
     override fun areContentsTheSame(oldItem: GiphyDomainModel, newItem: GiphyDomainModel): Boolean {
         return oldItem.id == newItem.id

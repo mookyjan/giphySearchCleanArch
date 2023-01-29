@@ -24,7 +24,8 @@ interface GiphyService {
     suspend fun searchForGiphys(
         @Query("q") searchInput: String,
         @Query("limit") limit :Int = LIMIT,
-        @Query("rating") rating: String = RATING
+        @Query("rating") rating: String = RATING,
+        @Query("offset") offset: Int
     ): GiphyRemoteResponse
 
 

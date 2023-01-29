@@ -1,5 +1,6 @@
 package com.mudassir.data.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.mudassir.data.datasource.remote.GiphyTrendingRemoteDataSource
@@ -8,6 +9,7 @@ import com.mudassir.domain.model.GiphyDomainModel
 import retrofit2.HttpException
 import java.io.IOException
 
+private const val GIPHY_STARTING_PAGE_INDEX = 1
 internal class PagingDataSource (private val giphyTrendingRemoteDataSource: GiphyTrendingRemoteDataSource,
                                  private val query: String?,
                                  private val giphyDataToDomainMapper: GiphyDataToDomainMapper
@@ -15,18 +17,23 @@ internal class PagingDataSource (private val giphyTrendingRemoteDataSource: Giph
     PagingSource<Int, GiphyDomainModel>() {
 
     override fun getRefreshKey(state: PagingState<Int, GiphyDomainModel>): Int? {
-       return 1
+        return state.anchorPosition?.let { anchorPosition ->
+            val anchorPage = state.closestPageToPosition(anchorPosition)
+            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
+        }
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GiphyDomainModel> {
-        val position = params.key ?: 1
+        val position = params.key ?: GIPHY_STARTING_PAGE_INDEX
+        Log.d("TAG Pagi", "load: $position   $params")
         return try {
-            val response = giphyTrendingRemoteDataSource.getTrendingGiphys(query, params.loadSize,position)
+            val response = giphyTrendingRemoteDataSource.getTrendingGiphys(query,position)
+           val totalCount = response.pagination?.totalCount
             val listing = giphyDataToDomainMapper.invoke(response)
             LoadResult.Page(
-                data = listing ?: listOf(),
-                prevKey = if (position == 1) null else position - 1,
-                nextKey = position + 1
+                data = listing ?: emptyList(),
+                prevKey = if (position == GIPHY_STARTING_PAGE_INDEX) null else position - 1,
+                nextKey = if (position == totalCount || totalCount == 0) null else position + 1
             )
         } catch (exception: IOException) {
             return LoadResult.Error(exception)

@@ -11,4 +11,7 @@
     <string name="btn_retry">Retry</string>
     <string name="txt_no_internet">No Internet Connection Please Try Again</string>
     <string name="txt_no_result">We are sorry no result found.</string>
+    <string name="txt_error">Error</string>
+    <string name="txt_retry">Retry</string>
+    <string name="txt_cancel">Cancel</string>
 </resources>

@@ -10,5 +10,9 @@ interface UseCase {
         suspend fun executeAsync(): Resource<T>
     }
 
+    interface UseCaseWithoutResource<params: Any?, T: Any> : UseCase {
+         fun executeAsync(param: params?): T
+    }
+
     abstract class Params
 }

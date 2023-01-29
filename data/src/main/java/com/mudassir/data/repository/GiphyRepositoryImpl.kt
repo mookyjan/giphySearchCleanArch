@@ -19,7 +19,7 @@ internal class GiphyRepositoryImpl(
     private val giphyTrendingLocalDataSource: GiphyTrendingLocalDataSource,
     private val giphyDataToDomainMapper: GiphyDataToDomainMapper
 ) : GiphyRepository {
-    override suspend fun getTrendingGiphy(query: String?): Flow<PagingData<GiphyDomainModel>> {
+    override  fun getTrendingGiphy(query: String?): Flow<PagingData<GiphyDomainModel>> {
 
         val pager =  Pager(
             config = PagingConfig(

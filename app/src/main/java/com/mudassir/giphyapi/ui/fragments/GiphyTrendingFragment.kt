@@ -1,5 +1,6 @@
 package com.mudassir.giphyapi.ui.fragments
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -12,15 +13,21 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mudassir.core.Status
+import com.mudassir.core.hide
 import com.mudassir.core.hideKeyboard
+import com.mudassir.core.show
 import com.mudassir.domain.model.GiphyDomainModel
 import com.mudassir.giphyapi.util.Constants.SAVED_QUERY_KEY
 import com.mudassir.giphyapi.R
 import com.mudassir.giphyapi.databinding.FragmentTrendingGiphyBinding
 import com.mudassir.giphyapi.di.modules.GenericSavedStateViewModelFactory
 import com.mudassir.giphyapi.di.modules.GiphyViewModelFactory
+import com.mudassir.giphyapi.ui.adapter.GiphyLoadingStateAdapter
+import com.mudassir.giphyapi.ui.adapter.GiphyLoadingStateViewHolder
 import com.mudassir.giphyapi.ui.adapter.GiphyTrendingAdapter
 import com.mudassir.giphyapi.ui.viewModel.GiphyTrendingViewModel
 import dagger.android.support.AndroidSupportInjection
@@ -67,7 +74,9 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
         Log.d(TAG, "onViewCreated: $query   ${viewModel.giphyLiveDataEvent.value}")
         observeEvents()
         uiSetup()
+//        observeFlowData()
         initRecyclerView()
+        setupForAdapter()
         //setup for the new menu options , the old one is deprecated
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
@@ -86,8 +95,17 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
         }
     }
 
+    private fun observeFlowData() {
+        viewModel.giphyFlowList.observe(viewLifecycleOwner, Observer {
+            mBinding.lyOffline.root.hide()
+            mBinding.rvGiphyList.show()
+            lifecycleScope.launch {
+                giphyAdapter.submitData(it)
+            }
+        })
+    }
+
     private fun observeEvents() {
-        viewModel.onEnter()
         viewModel.giphyLiveData.observe(viewLifecycleOwner, Observer {
             when (it.status) {
                 Status.LOADING -> {
@@ -97,26 +115,25 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
                 Status.SUCCESS -> {
                     hideProgressBar()
                     //hide the error layout
-                    mBinding.lyOffline.root.visibility = View.GONE
+                    mBinding.lyOffline.root.hide()
                     Log.d(TAG, "observeEvents: Success")
                     lifecycleScope.launch {
                         it.data?.collectLatest {
                             giphyAdapter.submitData(it)
                         }
                     }
-
                 }
                 Status.EMPTY -> {
                     hideProgressBar()
                     Log.d(TAG, "observeEvents: Empty")
                     //show the error layout
-                    mBinding.lyOffline.root.visibility = View.VISIBLE
+                    mBinding.lyOffline.root.show()
                     mBinding.lyOffline.tvErrorDetail.text = getString(R.string.txt_no_result)
                 }
                 Status.ERROR -> {
                     hideProgressBar()
                     Log.d(TAG, "observeEvents: Error ${it.data}")
-                    mBinding.lyOffline.root.visibility = View.VISIBLE
+                    mBinding.lyOffline.root.show()
                     mBinding.lyOffline.tvErrorDetail.text = getString(R.string.txt_error_description)
                 }
             }
@@ -124,11 +141,13 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
     }
 
     private fun showProgressBar() {
+        mBinding.rvGiphyList.hide()
         mBinding.progressCircular.show()
     }
 
     private fun hideProgressBar() {
         mBinding.progressCircular.hide()
+        mBinding.rvGiphyList.show()
     }
 
     private fun initRecyclerView() {
@@ -137,6 +156,43 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         mBinding.rvGiphyList.adapter = giphyAdapter
     }
+
+    private fun setupForAdapter() {
+        mBinding.rvGiphyList.adapter = giphyAdapter.withLoadStateHeaderAndFooter(
+            header = GiphyLoadingStateAdapter(),
+            footer = GiphyLoadingStateAdapter ()
+        )
+        giphyAdapter.addLoadStateListener { loadState ->
+            val errorState = loadState.source.append as? LoadState.Error
+                ?: loadState.source.prepend as? LoadState.Error
+                ?: loadState.append as? LoadState.Error
+                ?: loadState.prepend as? LoadState.Error
+
+            if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached) {
+                //when the list is empty for the first time or for the search result
+                if ( giphyAdapter.itemCount < 1){
+                    /// show empty view
+                    mBinding.lyOffline.root.show()
+                    mBinding.lyOffline.tvErrorDetail.text = getString(R.string.txt_no_result)
+                }
+            }
+            errorState?.let {
+                AlertDialog.Builder(view?.context)
+                    .setTitle(R.string.txt_error)
+                    .setMessage(it.error.localizedMessage)
+                    .setNegativeButton(R.string.txt_cancel) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .setPositiveButton(R.string.txt_retry) { dialog, _ ->
+                         dialog.dismiss()
+                        giphyAdapter.retry()
+                    }
+                    .show()
+            }
+        }
+
+    }
+
 
     companion object {
         fun newInstance() = GiphyTrendingFragment()

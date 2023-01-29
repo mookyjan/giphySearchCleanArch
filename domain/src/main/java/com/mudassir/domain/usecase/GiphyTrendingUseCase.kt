@@ -1,27 +1,25 @@
 package com.mudassir.domain.usecase
 
-import android.util.Log
 import androidx.paging.PagingData
-import com.mudassir.core.Resource
 import com.mudassir.core.UseCase
 import com.mudassir.core.util.ErrorFactory
 import com.mudassir.domain.model.GiphyDomainModel
 import com.mudassir.domain.repository.GiphyRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class GiphyTrendingUseCase @Inject constructor(
     private val giphyRepository: GiphyRepository,
     private val errorFactory: ErrorFactory
-) : UseCase.UseCaseWithParam<String?, Flow<PagingData<GiphyDomainModel>>> {
+) : UseCase.UseCaseWithoutResource<String?, Flow<PagingData<GiphyDomainModel>>> {
 
-    override suspend fun executeAsync(query: String?): Resource<Flow<PagingData<GiphyDomainModel>>> {
+    override fun executeAsync(query: String?): Flow<PagingData<GiphyDomainModel>> {
         return try {
-            val trendingList = giphyRepository.getTrendingGiphy(query)
-//            if (trendingList.isEmpty()) return Resource.empty(errorFactory.createEmptyErrorMessage())
-            Resource.success(trendingList)
+            val trendingList = giphyRepository.getTrendingGiphy(query = query)
+            trendingList
         } catch (ex: Exception) {
-            Resource.error(errorFactory.createApiErrorMessage(ex))
+            flow { errorFactory.createApiErrorMessage(ex) }
         }
     }
 }
