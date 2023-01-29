@@ -87,6 +87,8 @@ also TODO are given in the area which we can improve more.
 
 ![alt text](https://github.com/mookyjan/giphySearchCleanArch/blob/develop_pagination/screenshots/Screenshot_20230129_211827.png)
 
+![alt text](https://github.com/mookyjan/giphySearchCleanArch/blob/develop/screenshots/Screenshot_20230129_223527.png)
+
 
 ##TODO
 
