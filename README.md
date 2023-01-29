@@ -39,11 +39,11 @@ Project consist of One Activity and Two Fragments
 
 
 # Architecture Design
-![alt text](https://github.com/mookyjan/giphySearchCleanArch/tree/develop/diagram/clean%20architecture%20design.png)
+![alt text](https://github.com/mookyjan/giphySearchCleanArch/blob/develop/diagram/clean%20architecture%20design.png)
 
-![alt text](https://github.com/mookyjan/giphySearchCleanArch/tree/develop/diagram/clean-mvvm.png)
+![alt text](https://github.com/mookyjan/giphySearchCleanArch/blob/develop/diagram/clean-mvvm.png)
 
-![alt text](https://github.com/mookyjan/giphySearchCleanArch/tree/develop/diagram/project%20structure.png)
+![alt text](https://github.com/mookyjan/giphySearchCleanArch/blob/develop/diagram/project%20structure.png)
 
 
 # Modules
