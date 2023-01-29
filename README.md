@@ -8,6 +8,9 @@ There are two branches for this project
 2) [develop_pagination](https://github.com/mookyjan/giphySearchCleanArch/tree/develop_pagination) -> this branch have additional setup for pagination so user can scroll unlimited number of gifs
 
 
+
+### Note: UI is not very good the more focus was on the functionality. ###
+
 ### Structure of the code ###
 
 Simple Android Application written in Kotlin.
@@ -90,11 +93,11 @@ also TODO are given in the area which we can improve more.
 ![alt text](https://github.com/mookyjan/giphySearchCleanArch/blob/develop/screenshots/Screenshot_20230129_223527.png)
 
 
-##TODO
+# TODO
 
-need to make offline mode fist app
+# need to make offline mode fist app
 
-adding more unit test cases
+# adding more unit test cases 
 
 setup for CI/CD
 
