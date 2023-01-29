@@ -6,7 +6,7 @@ import com.mudassir.data.datasource.local.model.GiphyEntityModel
 
 internal class GiphyTrendingLocalDataSource(private val giphyDao: GiphyDao) {
 
-     fun getFavouriteGiphyList(): LiveData<List<GiphyEntityModel>> {
+    fun getFavouriteGiphyList(): LiveData<List<GiphyEntityModel>> {
         return giphyDao.getAll()
     }
 

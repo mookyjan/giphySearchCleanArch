@@ -6,11 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import com.mudassir.core.Status
 import com.mudassir.core.hide
 import com.mudassir.core.show
 import com.mudassir.domain.model.GiphyDomainModel
@@ -70,7 +68,6 @@ class FavouritesFragment : Fragment(), FavouriteAdapter.Callbacks {
     }
 
     private fun observeEvents() {
-
         viewModel.favouriteList.observe(viewLifecycleOwner, Observer {
             Log.d(TAG, "observeEvents: Success ${it?.size}")
             if (it.isEmpty()) {
@@ -79,43 +76,8 @@ class FavouritesFragment : Fragment(), FavouriteAdapter.Callbacks {
                 hideErrorText()
                 favouriteListAdapter.submitList(it)
             }
-
         })
-
-//        viewModel.getFavList().observe(viewLifecycleOwner) {
-//            when (it.status) {
-//                Status.LOADING -> {
-//                    Log.d(TAG, "observeEvents: Loading")
-//                    showProgressBar()
-//                }
-//                Status.SUCCESS -> {
-//                    hideProgressBar()
-//                    hideErrorText()
-//                    Log.d(TAG, "observeEvents: Success ${it.data?.size}")
-//                    favouriteListAdapter.submitList(it.data)
-//                }
-//                Status.EMPTY -> {
-//                    hideProgressBar()
-//                    showErrorText()
-//                    Log.d(TAG, "observeEvents: Empty")
-//                }
-//                Status.ERROR -> {
-//                    hideProgressBar()
-//                    showErrorText()
-//                    Log.d(TAG, "observeEvents: Error ${it.data}")
-//                }
-//            }
-//        }
     }
-
-    private fun showProgressBar() {
-        mBinding?.progressCircular?.show()
-    }
-
-    private fun hideProgressBar() {
-        mBinding?.progressCircular?.hide()
-    }
-
     private fun showErrorText() {
         mBinding?.rvFavouriteList?.hide()
         mBinding?.tvEmptyText?.show()
@@ -129,5 +91,4 @@ class FavouritesFragment : Fragment(), FavouriteAdapter.Callbacks {
     override fun onGiphyItemClick(view: View, item: GiphyDomainModel) {
         viewModel.removeFromFavourite(item)
     }
-
 }
