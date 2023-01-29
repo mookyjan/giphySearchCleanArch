@@ -1,10 +1,12 @@
 package com.mudassir.domain.repository
 
+import androidx.paging.PagingData
 import com.mudassir.domain.model.GiphyDomainModel
+import kotlinx.coroutines.flow.Flow
 
 interface GiphyRepository {
 
-    suspend fun getTrendingGiphy(query: String?): List<GiphyDomainModel>
+    suspend fun getTrendingGiphy(query: String?): Flow<PagingData<GiphyDomainModel>>
 
     suspend fun addToFavourite(giphyDomainModel: GiphyDomainModel)
 

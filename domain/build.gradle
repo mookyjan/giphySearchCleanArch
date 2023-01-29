@@ -28,6 +28,8 @@ dependencies {
     api Dependencies.dagger_android
     kapt Dependencies.dagger_android_processor
 
+   //pagination
+    api Dependencies.pagination
     //Test
     testImplementation TestDependencies.junit
     testImplementation TestDependencies.mockK

@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +14,7 @@ import com.mudassir.giphyapi.R
 import com.mudassir.giphyapi.databinding.SingleItemGiphyBinding
 
 class GiphyTrendingAdapter :
-    ListAdapter<GiphyDomainModel, GiphyTrendingAdapter.ItemViewHolder>(DiffCallback()) {
+    PagingDataAdapter<GiphyDomainModel, GiphyTrendingAdapter.ItemViewHolder>(DiffCallback()) {
 
     private var callbacks: Callbacks? = null
     fun setupListener(listener: Callbacks?) {
@@ -33,7 +34,9 @@ class GiphyTrendingAdapter :
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        getItem(position)?.let { giphyItem ->
+            holder.bind(giphyItem)
+        }
     }
 
     inner class ItemViewHolder(private val binding: SingleItemGiphyBinding) :

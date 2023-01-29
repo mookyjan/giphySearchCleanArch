@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mudassir.core.Status
 import com.mudassir.core.hideKeyboard
@@ -23,6 +24,9 @@ import com.mudassir.giphyapi.di.modules.GiphyViewModelFactory
 import com.mudassir.giphyapi.ui.adapter.GiphyTrendingAdapter
 import com.mudassir.giphyapi.ui.viewModel.GiphyTrendingViewModel
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -95,7 +99,12 @@ class GiphyTrendingFragment : Fragment(), MenuProvider, GiphyTrendingAdapter.Cal
                     //hide the error layout
                     mBinding.lyOffline.root.visibility = View.GONE
                     Log.d(TAG, "observeEvents: Success")
-                    giphyAdapter.submitList(it.data)
+                    lifecycleScope.launch {
+                        it.data?.collectLatest {
+                            giphyAdapter.submitData(it)
+                        }
+                    }
+
                 }
                 Status.EMPTY -> {
                     hideProgressBar()

@@ -71,6 +71,7 @@ dependencies {
     kapt Dependencies.glide_compiler
 
     implementation Dependencies.timber
+    implementation Dependencies.pagingCommon
 
     testImplementation TestDependencies.junit
     testImplementation TestDependencies.mockK

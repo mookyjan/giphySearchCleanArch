@@ -39,6 +39,9 @@ object Versions {
     //Room
     const val room ="2.5.0"
 
+    //Pagination
+    const val paging = "3.1.1"
+
     // Timber
     const val timber = "5.0.1"
 

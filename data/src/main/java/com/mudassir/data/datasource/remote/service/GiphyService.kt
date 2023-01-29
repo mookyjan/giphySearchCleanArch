@@ -16,7 +16,8 @@ interface GiphyService {
     @GET(TRENDING_API_END_POINT)
     suspend fun getTrendingGiphys(
         @Query("limit") limit :Int = LIMIT,
-        @Query("rating") rating: String = RATING
+        @Query("rating") rating: String = RATING,
+        @Query("offset") offset: Int
     ): GiphyRemoteResponse
 
     @GET(GIPHY_SEARCH_API_END_POINT)

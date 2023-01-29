@@ -1,5 +1,9 @@
 package com.mudassir.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.mudassir.data.paging.PagingDataSource
 import com.mudassir.data.datasource.remote.GiphyTrendingRemoteDataSource
 import com.mudassir.data.datasource.local.GiphyTrendingLocalDataSource
 import com.mudassir.data.datasource.local.model.GiphyEntityModel
@@ -8,15 +12,26 @@ import com.mudassir.data.datasource.local.model.toEntityModel
 import com.mudassir.data.mapper.GiphyDataToDomainMapper
 import com.mudassir.domain.model.GiphyDomainModel
 import com.mudassir.domain.repository.GiphyRepository
+import kotlinx.coroutines.flow.Flow
 
 internal class GiphyRepositoryImpl(
     private val giphyTrendingRemoteDataSource: GiphyTrendingRemoteDataSource,
     private val giphyTrendingLocalDataSource: GiphyTrendingLocalDataSource,
     private val giphyDataToDomainMapper: GiphyDataToDomainMapper
 ) : GiphyRepository {
-    override suspend fun getTrendingGiphy(query: String?): List<GiphyDomainModel> {
-        val list = giphyTrendingRemoteDataSource.getTrendingGiphys(query)
-        return giphyDataToDomainMapper.invoke(list)
+    override suspend fun getTrendingGiphy(query: String?): Flow<PagingData<GiphyDomainModel>> {
+
+        val pager =  Pager(
+            config = PagingConfig(
+                pageSize = 10,
+                enablePlaceholders = true,
+                maxSize = 30,
+                prefetchDistance = 5,
+                initialLoadSize = 20)
+        ) {
+            PagingDataSource(giphyTrendingRemoteDataSource, query, giphyDataToDomainMapper)
+        }.flow
+        return pager
     }
 
     override suspend fun getFavouriteGiphyList(): List<GiphyDomainModel> {
