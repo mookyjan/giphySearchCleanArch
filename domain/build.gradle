@@ -1,5 +1,6 @@
 import mudassir.dependencies.App
 import mudassir.dependencies.Dependencies
+import mudassir.dependencies.TestDependencies
 
 plugins {
     id 'com.android.library'
@@ -26,4 +27,10 @@ dependencies {
     kapt Dependencies.dagger_compiler
     api Dependencies.dagger_android
     kapt Dependencies.dagger_android_processor
+
+    //Test
+    testImplementation TestDependencies.junit
+    testImplementation TestDependencies.mockK
+    testImplementation TestDependencies.truth_ext
+    testImplementation TestDependencies.coroutines_core
 }

@@ -10,12 +10,12 @@ import com.mudassir.domain.model.GiphyDomainModel
 import com.mudassir.domain.repository.GiphyRepository
 
 internal class GiphyRepositoryImpl(
-    private val remoteGiphyRemoteResponse: GiphyTrendingRemoteDataSource,
+    private val giphyTrendingRemoteDataSource: GiphyTrendingRemoteDataSource,
     private val giphyTrendingLocalDataSource: GiphyTrendingLocalDataSource,
     private val giphyDataToDomainMapper: GiphyDataToDomainMapper
 ) : GiphyRepository {
     override suspend fun getTrendingGiphy(query: String?): List<GiphyDomainModel> {
-        val list = remoteGiphyRemoteResponse.getTrendingGiphys(query)
+        val list = giphyTrendingRemoteDataSource.getTrendingGiphys(query)
         return giphyDataToDomainMapper.invoke(list)
     }
 

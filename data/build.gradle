@@ -1,5 +1,6 @@
 import mudassir.dependencies.App
 import mudassir.dependencies.Dependencies
+import mudassir.dependencies.TestDependencies
 
 plugins {
     id 'com.android.library'
@@ -54,4 +55,10 @@ dependencies {
     api Dependencies.roomKtx
     api Dependencies.roomRuntime
     kapt Dependencies.roomCompiler
+
+    //Test
+    testImplementation TestDependencies.junit
+    testImplementation TestDependencies.mockK
+    testImplementation TestDependencies.truth_ext
+    testImplementation TestDependencies.coroutines_core
 }
