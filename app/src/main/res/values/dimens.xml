@@ -8,6 +8,7 @@
   <dimen name="spacing_small">4dp</dimen>
   <dimen name="spacing_normal">8dp</dimen>
   <dimen name="spacing_large">16dp</dimen>
+  <dimen name="button_space">32dp</dimen>
 
   <dimen name="text_size">16sp</dimen>
 
